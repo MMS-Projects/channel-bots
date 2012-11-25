@@ -18,7 +18,7 @@ public class Socket {
 	public Socket() {      
         try {
             connection = new java.net.Socket();
-            connection.connect(new InetSocketAddress("192.168.2.20", 7070));
+            connection.connect(new InetSocketAddress("localhost", 6667));
             writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream()));
             reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         } catch (UnknownHostException e) {
