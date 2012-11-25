@@ -1,3 +1,4 @@
+package net.mms_projects.irc.channel_bots;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
