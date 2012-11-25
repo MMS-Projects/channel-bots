@@ -4,19 +4,21 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.mms_projects.irc.channel_bots.irc.Command;
+import net.mms_projects.irc.channel_bots.irc.Handler;
 import net.mms_projects.irc.channel_bots.irc.Parser;
 import net.mms_projects.irc.channel_bots.irc.commands.EOS;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.Pass;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
-import net.mms_projects.irc.channel_bots.irc.commands.UnknownCommand;
+import net.mms_projects.irc.channel_bots.plugins.Main;
 
 public class ChannelBots {
 
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
 	
 	public void run() {
-
+		final Handler handler = new Handler();
+		
 		Pass pass = new Pass();
 		pass.password = "PassWord";
 		
@@ -53,6 +55,8 @@ public class ChannelBots {
 			}
 		}).start();
 		
+		final Main main = new Main(socket, handler);
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -63,13 +67,7 @@ public class ChannelBots {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					
-					System.out.println("Parsed: " + command.getClass().getSimpleName());
-					
-					if (command instanceof Ping) {
-						Ping ping = (Ping) command;
-						socket.write("PONG :" + ping.token);
-					}
+					handler.handle(command);
 				}
 			}
 		}).start();

@@ -22,7 +22,7 @@ public class Parser {
 					e.printStackTrace();
 				}
 				commandReturned.parse(rawdata);
-				return command;
+				return commandReturned;
 			}
 		}
 		commandReturned.parse(rawdata);
