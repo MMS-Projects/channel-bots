@@ -37,7 +37,6 @@ public class ChannelBots {
 			@Override
 			public void run() {
 				Parser parser = new Parser();
-				parser.addCommand(new UnknownCommand());
 				parser.addCommand(new Pass());
 				parser.addCommand(new EOS());
 				parser.addCommand(new NetInfo());
@@ -65,7 +64,7 @@ public class ChannelBots {
 						e.printStackTrace();
 					}
 					
-					System.out.println("Parsed: " + command);
+					System.out.println("Parsed: " + command.getClass().getSimpleName());
 					
 					if (command instanceof Ping) {
 						Ping ping = (Ping) command;
