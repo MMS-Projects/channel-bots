@@ -4,7 +4,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 
 public interface PingPongListener {
 
-	public void onPing(Ping ping);
-	// public void onPong(Pong ping);
+	public void onPing(Ping event);
+	// public void onPong(Pong event);
 	
 }

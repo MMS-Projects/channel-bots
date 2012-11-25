@@ -13,6 +13,7 @@ public class Parser {
 	}
 	
 	public Command parse(String rawdata) {
+		rawdata = rawdata.trim();
 		Command commandReturned = new UnknownCommand();
 		for (Command command : this.commands) {
 			if (command.checkMatch(rawdata)) {

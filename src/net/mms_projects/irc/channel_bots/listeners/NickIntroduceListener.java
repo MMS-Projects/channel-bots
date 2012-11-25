@@ -4,6 +4,6 @@ import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 
 public interface NickIntroduceListener {
 
-	public void onNickIntroduced(NickIntroduce introduce);
+	public void onNickIntroduced(NickIntroduce event);
 	
 }

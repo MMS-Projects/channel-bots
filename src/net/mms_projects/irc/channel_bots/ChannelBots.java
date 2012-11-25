@@ -11,6 +11,8 @@ import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Pass;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
+import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
+import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.plugins.Main;
 
 public class ChannelBots {
@@ -19,6 +21,7 @@ public class ChannelBots {
 	
 	public void run() {
 		final Handler handler = new Handler();
+		final UserList userList = new UserList();
 		
 		Pass pass = new Pass();
 		pass.password = "PassWord";
@@ -45,6 +48,8 @@ public class ChannelBots {
 				parser.addCommand(new NetInfo());
 				parser.addCommand(new Ping());
 				parser.addCommand(new NickIntroduce());
+				parser.addCommand(new SetHost());
+				parser.addCommand(new Away());
 				
 				while (true) {
 					String line = socket.read();
@@ -57,7 +62,7 @@ public class ChannelBots {
 			}
 		}).start();
 		
-		final Main main = new Main(socket, handler);
+		final Main main = new Main(socket, handler, userList);
 		
 		new Thread(new Runnable() {
 			@Override

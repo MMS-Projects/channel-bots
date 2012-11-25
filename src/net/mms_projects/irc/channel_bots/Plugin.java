@@ -6,10 +6,12 @@ public class Plugin {
 
 	protected Socket socket;
 	protected Handler handler;
+	protected UserList userList;
 	
-	public Plugin(Socket socket, Handler handler) {
+	public Plugin(Socket socket, Handler handler, UserList userList) {
 		this.socket = socket;
 		this.handler = handler;
+		this.userList = userList;
 	}
 	
 }
