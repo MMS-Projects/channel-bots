@@ -2,7 +2,6 @@ package net.mms_projects.irc.channel_bots.irc;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public abstract class Command {
 

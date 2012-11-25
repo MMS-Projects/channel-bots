@@ -1,17 +1,5 @@
 package net.mms_projects.irc.channel_bots;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.UnknownHostException;
-import java.text.Format;
-import java.util.Collection;
-import java.util.Formatter;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
