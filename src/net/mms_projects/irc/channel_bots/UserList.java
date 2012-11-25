@@ -24,4 +24,13 @@ public class UserList extends CopyOnWriteArrayList<User> {
 		}
 	}
 	
+	public void removeUser (String nickname) {
+		for (Iterator<User> iterator = this.iterator(); iterator.hasNext();) {
+			User user = iterator.next();
+			if (user.nickname.equals(nickname)) {
+				remove(user);
+				break;
+			}
+		}
+	}
 }
