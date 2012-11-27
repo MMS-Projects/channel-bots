@@ -1,10 +1,10 @@
 package net.mms_projects.irc.channel_bots;
 
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings("serial")
-public class UserList extends ArrayList<User> {
+public class UserList extends CopyOnWriteArrayList<User> {
 
 	public void updateUserHost(String nickname, String hostname) {
 		for (Iterator<User> iterator = this.iterator(); iterator.hasNext();) {
@@ -33,4 +33,14 @@ public class UserList extends ArrayList<User> {
 		}
 	}
 	
+	public void removeUser (String nickname) {
+		for (Iterator<User> iterator = this.iterator(); iterator.hasNext();) {
+			User user = iterator.next();
+			if (user.nickname.equals(nickname)) {
+				remove(user);
+				break;
+			}
+		}
+	}
+
 }

@@ -9,6 +9,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
+import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.listeners.NickIntroduceListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
@@ -50,6 +51,12 @@ public class Main extends Plugin implements PingPongListener,
 	@Override
 	public void onNickChange(NickChange event) {
 		this.userList.updateNickname(event.oldNickname, event.newNickname);
+	}
+	
+	@Override
+	public void onUserQuit(Quit event) {
+		System.out.println("Bye " + event.nickname);
+		this.userList.removeUser(event.nickname);
 	}
 
 }
