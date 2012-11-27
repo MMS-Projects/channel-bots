@@ -24,4 +24,13 @@ public class UserList extends ArrayList<User> {
 		}
 	}
 	
+	public void updateNickname(String oldNickname, String newNickname) {
+		for (Iterator<User> iterator = this.iterator(); iterator.hasNext();) {
+			User user = iterator.next();
+			if (user.nickname.equals(oldNickname)) {
+				user.nickname = newNickname;
+			}
+		}
+	}
+	
 }

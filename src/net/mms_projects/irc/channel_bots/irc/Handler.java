@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots.irc;
 import java.util.ArrayList;
 
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
+import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
@@ -49,6 +50,11 @@ public class Handler {
 		if (command instanceof Away) {
 			for (UserUpdateListener listener : this.userUpdateListeners) {
 				listener.onUserAway((Away) command);
+			}
+		}
+		if (command instanceof NickChange) {
+			for (UserUpdateListener listener : this.userUpdateListeners) {
+				listener.onNickChange((NickChange) command);
 			}
 		}
 	}
