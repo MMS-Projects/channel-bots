@@ -9,21 +9,15 @@ import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
-import net.mms_projects.irc.channel_bots.listeners.NickIntroduceListener;
 import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 
 public class Handler {
 
 	private ArrayList<PingPongListener> pingPongListeners = new ArrayList<PingPongListener>();
-	private ArrayList<NickIntroduceListener> nickIntroduceListeners = new ArrayList<NickIntroduceListener>();
 	private ArrayList<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
 
 	public void addPingPongListener(PingPongListener listener) {
 		this.pingPongListeners.add(listener);
-	}
-
-	public void addNickIntroduceListener(NickIntroduceListener listener) {
-		this.nickIntroduceListeners.add(listener);
 	}
 
 	public void addUserUpdateListener(UserUpdateListener listener) {
@@ -39,7 +33,7 @@ public class Handler {
 			}
 		}
 		if (command instanceof NickIntroduce) {
-			for (NickIntroduceListener listener : this.nickIntroduceListeners) {
+			for (UserUpdateListener listener : this.userUpdateListeners) {
 				listener.onNickIntroduced((NickIntroduce) command);
 			}
 		}

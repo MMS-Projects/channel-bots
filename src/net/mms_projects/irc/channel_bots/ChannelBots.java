@@ -15,6 +15,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
+import net.mms_projects.irc.channel_bots.plugins.EventDebug;
 import net.mms_projects.irc.channel_bots.plugins.Main;
 
 public class ChannelBots {
@@ -66,7 +67,8 @@ public class ChannelBots {
 			}
 		}).start();
 		
-		final Main main = new Main(socket, handler, userList);
+		final Plugin main = new Main(socket, handler, userList);
+		final Plugin eventDebug = new EventDebug(socket, handler, userList);
 		
 		new Thread(new Runnable() {
 			@Override
