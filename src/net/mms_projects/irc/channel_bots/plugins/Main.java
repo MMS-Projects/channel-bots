@@ -70,6 +70,11 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void onUserQuit(Quit event) {
+		for (Channel channel : this.channelList) {
+			User user = channel.users.getUserByName(event.nickname);
+			if (user != null)
+				channel.removeUser(user);
+		}
 		this.userList.removeUser(event.nickname);
 	}
 
@@ -111,12 +116,23 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void userJoined(Join event) {
-		this.channelList.addAll(Channel.createFromJoin(event));
+		for (String name : event.channels) {
+			Channel channel = this.channelList.getChannelByName(name);
+			if (channel == null) {
+				this.channelList.add(Channel.createFromName(name));
+			} else {
+				User user = this.userList.getUserByName(event.nickname);
+				channel.addUser(user);
+			}
+		}
 	}
 
 	@Override
 	public void userLeft(Part event) {
-
+		Channel channel = this.channelList.getChannelByName(event.channel);
+		User user = this.userList.getUserByName(event.nickname);
+		channel.removeUser(user);
+		if (channel.users.size() == 0) this.channelList.remove(channel);
 	}
 
 	@Override

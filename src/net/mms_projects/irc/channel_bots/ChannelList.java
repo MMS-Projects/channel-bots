@@ -19,11 +19,21 @@ public class ChannelList extends CopyOnWriteArrayList<Channel> {
 	public void removeChannel(String name) {
 		for (Iterator<Channel> iterator = this.iterator(); iterator.hasNext();) {
 			Channel entity = iterator.next();
-			if (entity.name.equals(name)) {
+			if (entity.name.equalsIgnoreCase(name)) {
 				remove(entity);
 				break;
 			}
 		}
+	}
+
+	public Channel getChannelByName(String name) {
+		for (Iterator<Channel> iterator = this.iterator(); iterator.hasNext();) {
+			Channel entity = iterator.next();
+			if (entity.name.equalsIgnoreCase(name)) {
+				return entity;
+			}
+		}
+		return null;
 	}
 
 }

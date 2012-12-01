@@ -9,6 +9,11 @@ public class Channel {
 
 	public String name;
 	public Topic topic;
+	public UserList users;
+	
+	public Channel () {
+		users = new UserList();
+	}
 
 	static public Collection<Channel> createFromJoin(Join event) {
 		CopyOnWriteArrayList<Channel> channels = new CopyOnWriteArrayList<Channel>();
@@ -20,4 +25,17 @@ public class Channel {
 		return channels;
 	}
 
+	public static Channel createFromName(String name2) {
+		Channel channel = new Channel();
+		channel.name = name2;
+		return channel;
+	}
+
+	public void addUser(User user) {
+		users.add(user);
+	}
+
+	public void removeUser(User user) {
+		users.remove(user);
+	}
 }
