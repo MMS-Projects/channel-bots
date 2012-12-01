@@ -18,6 +18,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
+import net.mms_projects.irc.channel_bots.irc.commands.Topic;
 import net.mms_projects.irc.channel_bots.plugins.EventDebug;
 import net.mms_projects.irc.channel_bots.plugins.Main;
 
@@ -42,17 +43,17 @@ public class ChannelBots {
 		server.description = "Channels services";
 		this.server = Server.createFromServerIntroduced(server);
 		serverList.add(this.server);
-		
+
 		EOS eos = new EOS();
 		eos.source = this.server.server;
-		
+
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
 		socket.write(eos.toString());
 		this.server.synced = true;
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -69,6 +70,7 @@ public class ChannelBots {
 				parser.addCommand(new ServerIntroduce());
 				parser.addCommand(new Join());
 				parser.addCommand(new Part());
+				parser.addCommand(new Topic());
 
 				while (true) {
 					String line = socket.read();

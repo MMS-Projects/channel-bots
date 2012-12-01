@@ -9,6 +9,7 @@ import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.Server;
 import net.mms_projects.irc.channel_bots.ServerList;
 import net.mms_projects.irc.channel_bots.Socket;
+import net.mms_projects.irc.channel_bots.Topic;
 import net.mms_projects.irc.channel_bots.User;
 import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
@@ -115,7 +116,15 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void userLeft(Part event) {
-		
+
+	}
+
+	@Override
+	public void topicChanged(
+			net.mms_projects.irc.channel_bots.irc.commands.Topic event) {
+		Topic topic = new Topic(event.nickname, event.timestamp, event.text);
+		this.channelList
+				.updateTopic(event.channel, topic);
 	}
 
 }

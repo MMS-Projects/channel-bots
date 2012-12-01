@@ -13,6 +13,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
+import net.mms_projects.irc.channel_bots.irc.commands.Topic;
 import net.mms_projects.irc.channel_bots.listeners.ChannelListener;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
@@ -98,6 +99,11 @@ public class Handler {
 		if (command instanceof EOS) {
 			for (NetworkListener listener : this.networkListeners) {
 				listener.onEOS((EOS) command);
+			}
+		}
+		if (command instanceof Topic) {
+			for (ChannelListener listener : this.channelListeners) {
+				listener.topicChanged((Topic) command);
 			}
 		}
 	}

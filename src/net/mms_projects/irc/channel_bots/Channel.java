@@ -8,6 +8,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Join;
 public class Channel {
 
 	public String name;
+	public Topic topic;
 
 	static public Collection<Channel> createFromJoin(Join event) {
 		CopyOnWriteArrayList<Channel> channels = new CopyOnWriteArrayList<Channel>();
