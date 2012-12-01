@@ -43,7 +43,7 @@ public class Server extends Command {
 	@Override
 	public String build() {
 		String description = this.description;
-		if (this.protocolFlags.length() > 0) {
+		if (this.protocolFlags != null) {
 			description = String.format("U%d-%s-%d %s", this.protocolVersion, this.protocolFlags, this.serverNumeric, this.serverName);
 		}
 		return String.format(this.outputPattern, this.server, this.hopCount, description);
