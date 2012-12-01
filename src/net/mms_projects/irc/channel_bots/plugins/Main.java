@@ -123,7 +123,10 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void userLeft(Part event) {
-		
+		Channel channel = this.channelList.getChannelByName(event.channel);
+		User user = this.userList.getUserByName(event.nickname);
+		channel.removeUser(user);
+		if (channel.users.size() == 0) this.channelList.remove(channel);
 	}
 
 }
