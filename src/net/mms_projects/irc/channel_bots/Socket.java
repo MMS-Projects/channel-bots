@@ -54,7 +54,7 @@ public class Socket {
 		try {
 			String line = reader.readLine();
 			if (line != null) {
-				System.out.println("Read: " + line);
+				System.out.println("Read: \"" + line + "\"");
 				return line;
 			}
 		} catch (IOException e) {
