@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Channel Bots" default="all">
+	<!--this file was created by Eclipse Runnable JAR Export Wizard-->
+	<!--ANT 1.7 is required                                        -->
+
+	<property name="version" value="0.0.1" />
+	
+	<property environment="env" />
+	<condition property="build.number" value="${env.BUILD_NUMBER}" else="ant">
+	    <isset property="env.BUILD_NUMBER" />
+	</condition>
+	
+	<target name="all" depends="jar" />
+	<!--	
+	<target name="all" depends="linux, windows" />
+
+	<target name="linux" depends="linux-x86, linux-x86_64" />
+	<target name="windows" depends="windows-x86, windows-x86_64" />
+
+	<target name="linux-x86_64" depends="linux-x86_64-jar" />
+	<target name="linux-x86" depends="linux-x86-jar" />
+	<target name="windows-x86" depends="windows-x86-jar" />
+	<target name="windows-x86_64" depends="windows-x86_64-jar" />
+	-->
+
+	<path id="global-classpath">
+	</path>
+
+	<!--
+	<path id="linux-x86-classpath">
+	</path>
+
+	<path id="linux-x86_64-classpath">
+	</path>
+
+	<path id="windows-x86-classpath">
+	</path>
+
+	<path id="windows-x86_64-classpath">
+	</path>
+	-->
+
+	<target name="compile" depends="clean">
+		<mkdir dir="build/classes" />
+		<!-- . is used for pointing to the current directory -->
+		<javac srcdir="src" destdir="build/classes">
+			<classpath refid="global-classpath" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile, global-manifest">
+		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/channel-bots.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<fileset dir=".">
+            		</fileset>
+		</jar>
+	</target>
+
+	<target name="clean">
+		<delete dir="build" />
+	</target>
+
+	<target name="global-manifest">
+		<mkdir dir="build/META-INF"/>
+		<manifest file="build/META-INF/MANIFEST.MF">
+			<attribute name="Main-Class" value="net.mms_projects.irc.channel_bots.ChannelBots" />
+			<attribute name="Class-Path" value="." />
+			<attribute name="Specification-Version" value="${version}" />
+			<attribute name="Implementation-Version" value="${build.number}" />
+		</manifest>
+	</target>
+
+</project>
