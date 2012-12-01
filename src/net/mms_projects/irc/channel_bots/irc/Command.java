@@ -29,5 +29,4 @@ public abstract class Command {
 	
 	abstract public void parse(String rawdata);
 	abstract public String build();
-
 }

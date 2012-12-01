@@ -3,7 +3,6 @@ package net.mms_projects.irc.channel_bots.plugins;
 import java.util.Date;
 
 import net.mms_projects.irc.channel_bots.ChannelBots;
-import net.mms_projects.irc.channel_bots.TimeManager;
 import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.User;
