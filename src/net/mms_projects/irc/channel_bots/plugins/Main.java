@@ -69,6 +69,11 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void onUserQuit(Quit event) {
+		for (Channel channel : this.channelList) {
+			User user = channel.users.getUserByName(event.nickname);
+			if (user != null)
+				channel.removeUser(user);
+		}
 		this.userList.removeUser(event.nickname);
 	}
 
