@@ -32,9 +32,14 @@ public class ChannelBots {
 		Pass pass = new Pass();
 		pass.password = "PassWord";
 		
+		Server server = new Server();
+		server.server = "channels.mms-projects.net";
+		server.hopCount = 1;
+		server.description = "Channels services";
+		
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
-		socket.write("SERVER channels.mms-projects.net 1 :Channels services");
+		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
 		
 		new Thread(new Runnable() {
