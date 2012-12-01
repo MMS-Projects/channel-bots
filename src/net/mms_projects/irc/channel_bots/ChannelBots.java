@@ -40,10 +40,15 @@ public class ChannelBots {
 		this.server = Server.createFromServerIntroduced(server);
 		serverList.add(this.server);
 		
+		EOS eos = new EOS();
+		eos.source = this.server.server;
+		
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
+		socket.write(eos.toString());
+		this.server.synced = true;
 		
 		new Thread(new Runnable() {
 			@Override

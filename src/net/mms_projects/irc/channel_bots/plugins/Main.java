@@ -11,6 +11,7 @@ import net.mms_projects.irc.channel_bots.User;
 import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
+import net.mms_projects.irc.channel_bots.irc.commands.EOS;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
@@ -94,6 +95,11 @@ public class Main extends Plugin implements PingPongListener,
 	@Override
 	public void onServerIntroduced(ServerIntroduce event) {
 		this.serverList.add(Server.createFromServerIntroduced(event));
+	}
+
+	@Override
+	public void onEOS(EOS command) {
+		this.serverList.updateServerSynced(command.source, true);
 	}
 
 }

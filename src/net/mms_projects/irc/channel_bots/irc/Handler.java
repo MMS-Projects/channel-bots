@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots.irc;
 import java.util.ArrayList;
 
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
+import net.mms_projects.irc.channel_bots.irc.commands.EOS;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
@@ -73,6 +74,11 @@ public class Handler {
 		if (command instanceof ServerIntroduce) {
 			for (NetworkListener listener : this.networkListeners) {
 				listener.onServerIntroduced((ServerIntroduce) command);
+			}
+		}
+		if (command instanceof EOS) {
+			for (NetworkListener listener : this.networkListeners) {
+				listener.onEOS((EOS) command);
 			}
 		}
 	}
