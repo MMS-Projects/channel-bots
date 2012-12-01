@@ -8,6 +8,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
@@ -87,6 +88,11 @@ public class Handler {
 		if (command instanceof Join) {
 			for (ChannelListener listener : this.channelListeners) {
 				listener.userJoined((Join) command);
+			}
+		}
+		if (command instanceof Part) {
+			for (ChannelListener listener : this.channelListeners) {
+				listener.userLeft((Part) command);
 			}
 		}
 		if (command instanceof EOS) {
