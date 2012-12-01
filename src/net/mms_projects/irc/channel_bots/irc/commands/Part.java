@@ -11,7 +11,7 @@ public class Part extends Command {
 	public String reason;
 	
 	public Part() {
-		super(":(.+) PART (.+)( :(.*))?", ":%s PART %s");
+		super(":(.+) PART ([^\\s]+)( :(.+))?", ":%s PART %s");
 	}
 
 	@Override
@@ -21,7 +21,6 @@ public class Part extends Command {
 			this.nickname = matcher.group(1);
 			this.channel = matcher.group(2);
 			this.reason = matcher.group(4);
-			System.out.println(this.nickname + " - " + this.channel + " - " + this.reason);
 		}
 	}
 
