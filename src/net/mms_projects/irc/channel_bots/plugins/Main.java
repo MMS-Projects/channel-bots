@@ -65,9 +65,8 @@ public class Main extends Plugin implements PingPongListener,
 	@Override
 	public void onNetInfo(NetInfo event) {
 		int timestamp = (int) (new Date().getTime() / 1000);
-		int offset = event.currentTime - timestamp;
-		offset *= 1000;
-		
+		int offset = (event.currentTime - timestamp) * 1000;
+
 		String message = "Set timestamp offset to " + offset + ". Server time: " + event.currentTime + ". Service time: " + timestamp;
 		System.out.println(message);
 		this.messageOps(message);
