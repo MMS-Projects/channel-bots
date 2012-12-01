@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots.irc;
 import java.util.ArrayList;
 
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
+import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
@@ -10,6 +11,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
+import net.mms_projects.irc.channel_bots.listeners.ChannelListener;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
 import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
@@ -19,6 +21,7 @@ public class Handler {
 	private ArrayList<PingPongListener> pingPongListeners = new ArrayList<PingPongListener>();
 	private ArrayList<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
 	private ArrayList<NetworkListener> networkListeners = new ArrayList<NetworkListener>();
+	private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
 
 	public void addPingPongListener(PingPongListener listener) {
 		this.pingPongListeners.add(listener);
@@ -30,6 +33,11 @@ public class Handler {
 	
 	public void addNetworkListener(NetworkListener listener) {
 		this.networkListeners.add(listener);
+	}
+	
+	public void addChannelListener(ChannelListener listener) {
+		this.channelListeners.add(listener);
+		
 	}
 
 	public void handle(Command command) {
@@ -73,6 +81,11 @@ public class Handler {
 		if (command instanceof ServerIntroduce) {
 			for (NetworkListener listener : this.networkListeners) {
 				listener.onServerIntroduced((ServerIntroduce) command);
+			}
+		}
+		if (command instanceof Join) {
+			for (ChannelListener listener : this.channelListeners) {
+				listener.userJoined((Join) command);
 			}
 		}
 	}
