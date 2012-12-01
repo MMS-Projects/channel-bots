@@ -2,6 +2,7 @@ package net.mms_projects.irc.channel_bots.plugins;
 
 import java.util.Date;
 
+import net.mms_projects.irc.channel_bots.Channel;
 import net.mms_projects.irc.channel_bots.ChannelBots;
 import net.mms_projects.irc.channel_bots.ChannelList;
 import net.mms_projects.irc.channel_bots.Plugin;
@@ -13,19 +14,22 @@ import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.irc.commands.EOS;
+import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
+import net.mms_projects.irc.channel_bots.listeners.ChannelListener;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
 import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 
 public class Main extends Plugin implements PingPongListener,
-		UserUpdateListener, NetworkListener {
+		UserUpdateListener, NetworkListener, ChannelListener {
 
 	public Main(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
@@ -34,6 +38,7 @@ public class Main extends Plugin implements PingPongListener,
 		handler.addPingPongListener(this);
 		handler.addUserUpdateListener(this);
 		handler.addNetworkListener(this);
+		handler.addChannelListener(this);
 	}
 
 	@Override
@@ -101,6 +106,16 @@ public class Main extends Plugin implements PingPongListener,
 	@Override
 	public void onEOS(EOS command) {
 		this.serverList.updateServerSynced(command.source, true);
+	}
+
+	@Override
+	public void userJoined(Join event) {
+		this.channelList.addAll(Channel.createFromJoin(event));
+	}
+
+	@Override
+	public void userLeft(Part event) {
+		
 	}
 
 }
