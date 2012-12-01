@@ -71,8 +71,8 @@ public class ChannelBots {
 			}
 		}).start();
 		
-		final Plugin main = new Main(socket, handler, userList, serverList);
-		final Plugin eventDebug = new EventDebug(socket, handler, userList,
+		/*final Plugin main = */new Main(socket, handler, userList, serverList);
+		/*final Plugin eventDebug = */new EventDebug(socket, handler, userList,
 				serverList);
 		
 		new Thread(new Runnable() {
