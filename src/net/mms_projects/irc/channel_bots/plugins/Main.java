@@ -110,7 +110,15 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void userJoined(Join event) {
-		this.channelList.addAll(Channel.createFromJoin(event));
+		for (String name : event.channels) {
+			Channel channel = this.channelList.getChannelByName(name);
+			if (channel == null) {
+				this.channelList.add(Channel.createFromName(name));
+			} else {
+				User user = this.userList.getUserByName(event.nickname);
+				channel.addUser(user);
+			}
+		}
 	}
 
 	@Override

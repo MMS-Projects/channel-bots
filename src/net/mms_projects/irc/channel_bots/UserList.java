@@ -43,4 +43,14 @@ public class UserList extends CopyOnWriteArrayList<User> {
 		}
 	}
 
+	public User getUserByName(String nickname) {
+		for (Iterator<User> iterator = this.iterator(); iterator.hasNext();) {
+			User user = iterator.next();
+			if (user.nickname.equals(nickname)) {
+				return user;
+			}
+		}
+		return null;
+	}
+
 }
