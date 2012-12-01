@@ -3,20 +3,18 @@ package net.mms_projects.irc.channel_bots;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 
 public class Server {
+
 	public String server;
 	public int hopCount;
 	public String description;
-	
+
+	public boolean synced;
+
 	// Optional options
 	public int protocolVersion;
 	public String protocolFlags;
 	public int serverNumeric;
 	public String serverName;
-	public boolean synced;
-	
-	public Server () {
-		synced = false;
-	}
 
 	public static Server createFromServerIntroduced(ServerIntroduce event) {
 		Server s = new Server();
