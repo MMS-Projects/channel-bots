@@ -8,6 +8,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
+import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
@@ -67,6 +68,11 @@ public class Handler {
 		if (command instanceof Quit) {
 			for (UserUpdateListener listener : this.userUpdateListeners) {
 				listener.onUserQuit((Quit) command);
+			}
+		}
+		if (command instanceof ServerIntroduce) {
+			for (NetworkListener listener : this.networkListeners) {
+				listener.onServerIntroduced((ServerIntroduce) command);
 			}
 		}
 	}

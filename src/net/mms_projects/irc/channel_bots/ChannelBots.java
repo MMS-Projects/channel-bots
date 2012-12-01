@@ -14,7 +14,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Pass;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
-import net.mms_projects.irc.channel_bots.irc.commands.Server;
+import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.plugins.EventDebug;
 import net.mms_projects.irc.channel_bots.plugins.Main;
@@ -22,20 +22,23 @@ import net.mms_projects.irc.channel_bots.plugins.Main;
 public class ChannelBots {
 
 	static public TimeManager date = new TimeManager(0);
-	
+	public Server server;
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
 	
 	public void run() {
 		final Handler handler = new Handler();
 		final UserList userList = new UserList();
+		final ServerList serverList = new ServerList();
 		
 		Pass pass = new Pass();
 		pass.password = "PassWord";
 		
-		Server server = new Server();
+		ServerIntroduce server = new ServerIntroduce();
 		server.server = "channels.mms-projects.net";
 		server.hopCount = 1;
 		server.description = "Channels services";
+		this.server = Server.createFromServerIntroduced(server);
+		serverList.add(this.server);
 		
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
@@ -55,7 +58,7 @@ public class ChannelBots {
 				parser.addCommand(new Away());
 				parser.addCommand(new NickChange());
 				parser.addCommand(new Quit());
-				parser.addCommand(new Server());
+				parser.addCommand(new ServerIntroduce());
 				
 				while (true) {
 					String line = socket.read();
@@ -68,8 +71,9 @@ public class ChannelBots {
 			}
 		}).start();
 		
-		final Plugin main = new Main(socket, handler, userList);
-		final Plugin eventDebug = new EventDebug(socket, handler, userList);
+		/*final Plugin main = */new Main(socket, handler, userList, serverList);
+		/*final Plugin eventDebug = */new EventDebug(socket, handler, userList,
+				serverList);
 		
 		new Thread(new Runnable() {
 			@Override
