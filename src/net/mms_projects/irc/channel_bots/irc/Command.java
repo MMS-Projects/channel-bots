@@ -1,13 +1,10 @@
 package net.mms_projects.irc.channel_bots.irc;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Command {
 
-	public static List<Command> commands = new ArrayList<Command>();
 	public Pattern inputPattern;
 	public String outputPattern;
 	
