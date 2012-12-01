@@ -20,6 +20,8 @@ import net.mms_projects.irc.channel_bots.plugins.Main;
 
 public class ChannelBots {
 
+	static public TimeManager date = new TimeManager(0);
+	
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
 	
 	public void run() {
@@ -29,18 +31,10 @@ public class ChannelBots {
 		Pass pass = new Pass();
 		pass.password = "PassWord";
 		
-		NetInfo netInfo = new NetInfo();
-		netInfo.maxGlobal = 10;
-		netInfo.currentTime = (int) (System.currentTimeMillis() / 1000);
-		netInfo.protocolVersion = 0;
-		netInfo.cloakHash = "*";
-		netInfo.networkName = "MMS-Projects IRC";
-		
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write("SERVER channels.mms-projects.net 1 :Channels services");
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
-		socket.write(netInfo.toString());
 		
 		new Thread(new Runnable() {
 			@Override

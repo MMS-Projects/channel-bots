@@ -1,5 +1,9 @@
 package net.mms_projects.irc.channel_bots.plugins;
 
+import java.util.Date;
+
+import net.mms_projects.irc.channel_bots.ChannelBots;
+import net.mms_projects.irc.channel_bots.TimeManager;
 import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.User;
@@ -60,7 +64,27 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void onNetInfo(NetInfo event) {
-		System.out.println("Timestamp: " + event.currentTime + " - Of by: " + (event.currentTime - (System.currentTimeMillis() / 1000)));
+		int timestamp = (int) (new Date().getTime() / 1000);
+		int offset = event.currentTime - timestamp;
+		offset *= 1000;
+		
+		String message = "Set timestamp offset to " + offset + ". Server time: " + event.currentTime + ". Service time: " + timestamp;
+		System.out.println(message);
+		this.messageOps(message);
+		
+		ChannelBots.date.setOffset(offset);
+		
+		NetInfo netInfo = new NetInfo();
+		netInfo.maxGlobal = 10;
+		netInfo.currentTime = (int) (ChannelBots.date.getDate().getTime() / 1000);
+		netInfo.protocolVersion = 0;
+		netInfo.cloakHash = "*";
+		netInfo.networkName = "MMS-Projects IRC";
+		socket.write(netInfo.toString());
 	}
 
+	public void messageOps(String message) {
+		this.socket.write(":channels.mms-projects.net SMO o :" + message);
+	}
+	
 }
