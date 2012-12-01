@@ -25,27 +25,28 @@ public class ChannelBots {
 	static public TimeManager date = new TimeManager(0);
 	public Server server;
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
-	
+
 	public void run() {
 		final Handler handler = new Handler();
 		final UserList userList = new UserList();
+		final ChannelList channelList = new ChannelList();
 		final ServerList serverList = new ServerList();
-		
+
 		Pass pass = new Pass();
 		pass.password = "PassWord";
-		
+
 		ServerIntroduce server = new ServerIntroduce();
 		server.server = "channels.mms-projects.net";
 		server.hopCount = 1;
 		server.description = "Channels services";
 		this.server = Server.createFromServerIntroduced(server);
 		serverList.add(this.server);
-		
+
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
-		
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -61,22 +62,23 @@ public class ChannelBots {
 				parser.addCommand(new Quit());
 				parser.addCommand(new ServerIntroduce());
 				parser.addCommand(new Join());
-				
+
 				while (true) {
 					String line = socket.read();
 					Command command = parser.parse(line);
-					
+
 					if (command != null) {
 						ChannelBots.this.parsed.add(command);
 					}
 				}
 			}
 		}).start();
-		
-		/*final Plugin main = */new Main(socket, handler, userList, serverList);
-		/*final Plugin eventDebug = */new EventDebug(socket, handler, userList,
-				serverList);
-		
+
+		/* final Plugin main = */new Main(socket, handler, userList,
+				channelList, serverList);
+		/* final Plugin eventDebug = */new EventDebug(socket, handler,
+				userList, channelList, serverList);
+
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -92,7 +94,7 @@ public class ChannelBots {
 			}
 		}).start();
 	}
-	
+
 	static public void main(String[] args) {
 		ChannelBots channelBots = new ChannelBots();
 		channelBots.run();

@@ -1,5 +1,6 @@
 package net.mms_projects.irc.channel_bots.plugins;
 
+import net.mms_projects.irc.channel_bots.ChannelList;
 import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.ServerList;
 import net.mms_projects.irc.channel_bots.Socket;
@@ -15,9 +16,9 @@ import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 public class EventDebug extends Plugin implements UserUpdateListener {
 
 	public EventDebug(Socket socket, Handler handler, UserList userList,
-			ServerList serverList) {
-		super(socket, handler, userList, serverList);
-		
+			ChannelList channelList, ServerList serverList) {
+		super(socket, handler, userList, channelList, serverList);
+
 		handler.addUserUpdateListener(this);
 	}
 
