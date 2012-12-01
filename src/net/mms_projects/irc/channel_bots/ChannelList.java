@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @SuppressWarnings("serial")
 public class ChannelList extends CopyOnWriteArrayList<Channel> {
 
-	public void updateTopic(String channel, net.mms_projects.irc.channel_bots.Topic topic) {
+	public void updateTopic(String channel, Topic topic) {
 		for (Iterator<Channel> iterator = this.iterator(); iterator.hasNext();) {
 			Channel entity = iterator.next();
 			if (entity.name.equals(channel)) {
