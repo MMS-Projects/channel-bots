@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots.irc;
 import java.util.ArrayList;
 
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
+import net.mms_projects.irc.channel_bots.irc.commands.EOS;
 import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
@@ -30,14 +31,14 @@ public class Handler {
 	public void addUserUpdateListener(UserUpdateListener listener) {
 		this.userUpdateListeners.add(listener);
 	}
-	
+
 	public void addNetworkListener(NetworkListener listener) {
 		this.networkListeners.add(listener);
 	}
-	
+
 	public void addChannelListener(ChannelListener listener) {
 		this.channelListeners.add(listener);
-		
+
 	}
 
 	public void handle(Command command) {
@@ -86,6 +87,11 @@ public class Handler {
 		if (command instanceof Join) {
 			for (ChannelListener listener : this.channelListeners) {
 				listener.userJoined((Join) command);
+			}
+		}
+		if (command instanceof EOS) {
+			for (NetworkListener listener : this.networkListeners) {
+				listener.onEOS((EOS) command);
 			}
 		}
 	}

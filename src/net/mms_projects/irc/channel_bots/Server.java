@@ -12,8 +12,10 @@ public class Server {
 	public String protocolFlags;
 	public int serverNumeric;
 	public String serverName;
+	public boolean synced;
 	
 	public Server () {
+		synced = false;
 	}
 
 	public static Server createFromServerIntroduced(ServerIntroduce event) {
