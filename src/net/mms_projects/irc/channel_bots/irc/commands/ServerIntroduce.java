@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import net.mms_projects.irc.channel_bots.irc.Command;
 
-public class Server extends Command {
+public class ServerIntroduce extends Command {
 
 	public String server;
 	public int hopCount;
@@ -17,7 +17,7 @@ public class Server extends Command {
 	public int serverNumeric;
 	public String serverName;
 	
-	public Server() {
+	public ServerIntroduce() {
 		super("SERVER (.+) (\\d+) :(.+)", "SERVER %s %d :%s");
 	}
 

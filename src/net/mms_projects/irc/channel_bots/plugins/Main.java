@@ -4,6 +4,8 @@ import java.util.Date;
 
 import net.mms_projects.irc.channel_bots.ChannelBots;
 import net.mms_projects.irc.channel_bots.Plugin;
+import net.mms_projects.irc.channel_bots.Server;
+import net.mms_projects.irc.channel_bots.ServerList;
 import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.User;
 import net.mms_projects.irc.channel_bots.UserList;
@@ -14,6 +16,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
+import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
@@ -22,8 +25,9 @@ import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 public class Main extends Plugin implements PingPongListener,
 		UserUpdateListener, NetworkListener {
 
-	public Main(Socket socket, Handler handler, UserList userList) {
-		super(socket, handler, userList);
+	public Main(Socket socket, Handler handler, UserList userList,
+			ServerList serverList) {
+		super(socket, handler, userList, serverList);
 
 		handler.addPingPongListener(this);
 		handler.addUserUpdateListener(this);
@@ -55,7 +59,7 @@ public class Main extends Plugin implements PingPongListener,
 	public void onNickChange(NickChange event) {
 		this.userList.updateNickname(event.oldNickname, event.newNickname);
 	}
-	
+
 	@Override
 	public void onUserQuit(Quit event) {
 		this.userList.removeUser(event.nickname);
@@ -66,12 +70,14 @@ public class Main extends Plugin implements PingPongListener,
 		int timestamp = (int) (new Date().getTime() / 1000);
 		int offset = (event.currentTime - timestamp) * 1000;
 
-		String message = "Set timestamp offset to " + offset + ". Server time: " + event.currentTime + ". Service time: " + timestamp;
+		String message = "Set timestamp offset to " + offset
+				+ ". Server time: " + event.currentTime + ". Service time: "
+				+ timestamp;
 		System.out.println(message);
 		this.messageOps(message);
-		
+
 		ChannelBots.date.setOffset(offset);
-		
+
 		NetInfo netInfo = new NetInfo();
 		netInfo.maxGlobal = 10;
 		netInfo.currentTime = (int) (ChannelBots.date.getDate().getTime() / 1000);
@@ -84,5 +90,10 @@ public class Main extends Plugin implements PingPongListener,
 	public void messageOps(String message) {
 		this.socket.write(":channels.mms-projects.net SMO o :" + message);
 	}
-	
+
+	@Override
+	public void onServerIntroduced(ServerIntroduce event) {
+		this.serverList.add(Server.createFromServerIntroduced(event));
+	}
+
 }
