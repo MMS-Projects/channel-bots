@@ -8,12 +8,17 @@ import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.managers.ServiceManager;
 
 public class ProgrammableBots extends Plugin {
-
+	public ServiceManager manager;
+	
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
 		super(socket, handler, userList, channelList, serverList);
+		
+		this.manager = new ServiceManager(socket, handler, userList, channelList, serverList);
+		handler.addManager(this.manager);
 		
 		NickIntroduce pBot = new NickIntroduce();
 		pBot.nickname = "PBot";
