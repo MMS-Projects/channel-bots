@@ -1,12 +1,16 @@
 package net.mms_projects.irc.channel_bots;
 
+import net.mms_projects.irc.channel_bots.irc.Command;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Quit;
+import net.mms_projects.irc.channel_bots.managers.ServiceManager;
 
 public class Bot {
 	public String nickname;
 	public String hostname;
 	public String username;
 	public String realname;
+	public ServiceManager manager;
 	public boolean quit;
 	
 	public Bot (String nickname, String realname, String username, 
@@ -31,7 +35,19 @@ public class Bot {
 		return c;
 	}
 	
-	public void quit () {
+	public void write (Command command) {
+		manager.write(command);
+	}
+	
+	public void quit (String reason) {
+		Quit c = new Quit();
+		c.nickname = nickname;
+		c.reason = reason;
+		write(c);
 		quit = true;
+	}
+	
+	public void join (String channel) {
+		
 	}
 }
