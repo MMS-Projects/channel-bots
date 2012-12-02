@@ -28,7 +28,7 @@ import net.mms_projects.irc.channel_bots.plugins.ProgrammableBots;
 public class ChannelBots {
 
 	static public TimeManager date = new TimeManager(0);
-	public Server server;
+	public static Server server;
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
 
 	public void run() {
@@ -44,18 +44,18 @@ public class ChannelBots {
 		server.server = "channels.mms-projects.net";
 		server.hopCount = 1;
 		server.description = "Channels services";
-		this.server = Server.createFromServerIntroduced(server);
-		serverList.add(this.server);
+		ChannelBots.server = Server.createFromServerIntroduced(server);
+		serverList.add(ChannelBots.server);
 
 		EOS eos = new EOS();
-		eos.source = this.server.server;
+		eos.source = ChannelBots.server.server;
 
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
 		socket.write(eos.toString());
-		this.server.synced = true;
+		ChannelBots.server.synced = true;
 
 		new Thread(new Runnable() {
 			@Override
@@ -105,6 +105,32 @@ public class ChannelBots {
 						e.printStackTrace();
 					}
 					handler.handle(command);
+				}
+			}
+		}).start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run () {
+				long now, lastTime = System.currentTimeMillis();
+				double unprocessed = 0.0;
+				int TPS = 100; //Ticks per second
+				long delta;
+				for(;;) {
+					now = System.currentTimeMillis();
+					delta = now - lastTime;
+					lastTime = now;
+					
+					unprocessed += delta / (1000.0 / TPS);
+					while (unprocessed > 1.0) {
+						unprocessed--;
+						handler.tick();
+					}
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}).start();
