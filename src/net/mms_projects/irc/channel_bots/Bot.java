@@ -74,8 +74,8 @@ public class Bot {
 		write(c);
 	}
 
-	public void say(String destination, String message) {
-		this.privMsg(destination, message);
+	public void say(String target, String message) {
+		this.privMsg(target, message);
 	}
 
 	public void part(String channel) {
