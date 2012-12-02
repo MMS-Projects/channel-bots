@@ -1,6 +1,5 @@
 package net.mms_projects.irc.channel_bots;
 
-import net.mms_projects.irc.channel_bots.irc.Command;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 
 public class Bot {
