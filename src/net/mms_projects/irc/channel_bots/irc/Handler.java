@@ -8,13 +8,16 @@ import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Notice;
 import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
+import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.irc.commands.Topic;
 import net.mms_projects.irc.channel_bots.listeners.ChannelListener;
+import net.mms_projects.irc.channel_bots.listeners.MessageListener;
 import net.mms_projects.irc.channel_bots.listeners.NetworkListener;
 import net.mms_projects.irc.channel_bots.listeners.PingPongListener;
 import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
@@ -25,6 +28,7 @@ public class Handler {
 	private ArrayList<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
 	private ArrayList<NetworkListener> networkListeners = new ArrayList<NetworkListener>();
 	private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
+	private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
 
 	public void addPingPongListener(PingPongListener listener) {
 		this.pingPongListeners.add(listener);
@@ -40,7 +44,10 @@ public class Handler {
 
 	public void addChannelListener(ChannelListener listener) {
 		this.channelListeners.add(listener);
+	}
 
+	public void addMessageListener(MessageListener listener) {
+		this.messageListeners.add(listener);
 	}
 
 	public void handle(Command command) {
@@ -104,6 +111,16 @@ public class Handler {
 		if (command instanceof Topic) {
 			for (ChannelListener listener : this.channelListeners) {
 				listener.topicChanged((Topic) command);
+			}
+		}
+		if (command instanceof PrivMsg) {
+			for (MessageListener listener : this.messageListeners) {
+				listener.onPrivMsg((PrivMsg) command);
+			}
+		}
+		if (command instanceof Notice) {
+			for (MessageListener listener : this.messageListeners) {
+				listener.onNotice((Notice) command);
 			}
 		}
 	}

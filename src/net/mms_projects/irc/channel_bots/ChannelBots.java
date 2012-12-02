@@ -12,9 +12,11 @@ import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NetInfo;
 import net.mms_projects.irc.channel_bots.irc.commands.NickChange;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Notice;
 import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.Pass;
 import net.mms_projects.irc.channel_bots.irc.commands.Ping;
+import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.irc.commands.ServerIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
@@ -72,6 +74,8 @@ public class ChannelBots {
 				parser.addCommand(new Join());
 				parser.addCommand(new Part());
 				parser.addCommand(new Topic());
+				parser.addCommand(new PrivMsg());
+				parser.addCommand(new Notice());
 
 				while (true) {
 					String line = socket.read();
