@@ -25,5 +25,6 @@ public class ServiceManager extends Manager {
 
 	public void newBot(Bot bot) {
 		bots.add(bot);
+		write(bot.getNickIntroduce());
 	}
 }
