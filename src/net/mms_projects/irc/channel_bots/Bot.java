@@ -8,9 +8,11 @@ public class Bot {
 	public String hostname;
 	public String username;
 	public String realname;
+	public boolean quit;
 	
 	public Bot (String nickname, String realname, String username, 
 			String hostname) {
+		this.quit = false;
 		this.nickname = nickname;
 		this.hostname = hostname;
 		this.username = username;
@@ -28,5 +30,9 @@ public class Bot {
 		c.serviceStamp = 1;
 		c.realname = realname;
 		return null;
+	}
+	
+	public void quit () {
+		quit = true;
 	}
 }

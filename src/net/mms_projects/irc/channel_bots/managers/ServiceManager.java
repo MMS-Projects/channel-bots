@@ -20,7 +20,11 @@ public class ServiceManager extends Manager {
 
 	@Override
 	public void tick() {
-
+		for (Bot bot : bots) {
+			if (bot.quit) {
+				bots.remove(bot);
+			}
+		}
 	}
 
 	public void newBot(Bot bot) {
