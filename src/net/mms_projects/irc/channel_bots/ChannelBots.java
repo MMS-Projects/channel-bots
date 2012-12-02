@@ -26,7 +26,7 @@ import net.mms_projects.irc.channel_bots.plugins.ProgrammableBots;
 public class ChannelBots {
 
 	static public TimeManager date = new TimeManager(0);
-	public Server server;
+	public static Server server;
 	private BlockingQueue<Command> parsed = new LinkedBlockingQueue<Command>();
 
 	public void run() {
@@ -42,18 +42,18 @@ public class ChannelBots {
 		server.server = "channels.mms-projects.net";
 		server.hopCount = 1;
 		server.description = "Channels services";
-		this.server = Server.createFromServerIntroduced(server);
-		serverList.add(this.server);
+		ChannelBots.server = Server.createFromServerIntroduced(server);
+		serverList.add(ChannelBots.server);
 
 		EOS eos = new EOS();
-		eos.source = this.server.server;
+		eos.source = ChannelBots.server.server;
 
 		final Socket socket = new Socket();
 		socket.write(pass.toString());
 		socket.write(server.toString());
 		socket.write("NICK ChannelBot 1 1 ChannelBot channel-bot.mms-projects.net channels.mms-projects.net 1 :Channel Bot");
 		socket.write(eos.toString());
-		this.server.synced = true;
+		ChannelBots.server.synced = true;
 
 		new Thread(new Runnable() {
 			@Override
