@@ -29,7 +29,7 @@ public class Bot {
 		c.server = ChannelBots.server.server;
 		c.serviceStamp = 1;
 		c.realname = realname;
-		return null;
+		return c;
 	}
 	
 	public void quit () {
