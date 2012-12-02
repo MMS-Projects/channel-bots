@@ -11,6 +11,7 @@ import net.mms_projects.irc.channel_bots.managers.ServiceManager;
 
 public class ProgrammableBots extends Plugin {
 	public ServiceManager manager;
+	public Bot pbot;
 	
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
@@ -19,8 +20,14 @@ public class ProgrammableBots extends Plugin {
 		this.manager = new ServiceManager(socket, handler, userList, channelList, serverList);
 		handler.addManager(this.manager);
 		
-		this.manager.newBot(new Bot("PBot", "Programmable Bot interface",
-				"P-Bot", "channel-bot.mms-projects.net"));
+		pbot = new Bot("PBot", "Programmable Bot interface", "P-Bot",
+				"channel-bot.mms-projects.net");
+		this.manager.newBot(pbot);
+		pbot.join("#test");
 	}
 
+	public void tick () {
+		super.tick();
+		pbot.say("#test", "Hello");
+	}
 }

@@ -1,6 +1,7 @@
 package net.mms_projects.irc.channel_bots;
 
 import net.mms_projects.irc.channel_bots.irc.Command;
+import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
 import net.mms_projects.irc.channel_bots.irc.commands.Notice;
 import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
@@ -49,10 +50,6 @@ public class Bot {
 		quit = true;
 	}
 
-	public void join(String channel) {
-
-	}
-	
 	public void privMSg(String target, String text) {
 		PrivMsg privMsg = new PrivMsg();
 		privMsg.source = this.nickname;
@@ -60,7 +57,7 @@ public class Bot {
 		privMsg.text = text;
 		write(privMsg);
 	}
-	
+
 	public void notice(String target, String text) {
 		Notice notice = new Notice();
 		notice.source = this.nickname;
@@ -68,5 +65,16 @@ public class Bot {
 		notice.text = text;
 		write(notice);
 	}
-	
+
+	public void join(String channel) {
+		Join c = new Join();
+		c.channels = new String[] { channel };
+		c.nickname = nickname;
+		write(c);
+	}
+
+	public void say(String destination, String message) {
+		this.privMSg(destination, message);
+	}
+
 }
