@@ -2,6 +2,7 @@ package net.mms_projects.irc.channel_bots.irc;
 
 import java.util.ArrayList;
 
+import net.mms_projects.irc.channel_bots.Manager;
 import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.irc.commands.EOS;
