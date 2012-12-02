@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots;
 import net.mms_projects.irc.channel_bots.irc.Command;
 import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.NickIntroduce;
+import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.Quit;
 import net.mms_projects.irc.channel_bots.managers.ServiceManager;
 
@@ -57,5 +58,17 @@ public class Bot {
 
 	public void say(String destination, String message) {
 		//TODO Privmsg
+	}
+
+	public void part(String channel) {
+		part(channel, null);
+	}
+	
+	public void part(String channel, String reason) {
+		Part c = new Part();
+		c.channel = channel;
+		c.reason = reason;
+		c.nickname = nickname;
+		write(c);
 	}
 }

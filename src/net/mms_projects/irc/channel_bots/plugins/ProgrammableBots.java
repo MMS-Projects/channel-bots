@@ -28,6 +28,7 @@ public class ProgrammableBots extends Plugin {
 
 	public void tick () {
 		super.tick();
-		pbot.say("#test", "Hello");
+		pbot.part("#test");
+		pbot.join("#test");
 	}
 }
