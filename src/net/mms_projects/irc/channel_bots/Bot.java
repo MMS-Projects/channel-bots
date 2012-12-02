@@ -51,7 +51,7 @@ public class Bot {
 		quit = true;
 	}
 
-	public void privMSg(String target, String text) {
+	public void privMsg(String target, String text) {
 		PrivMsg privMsg = new PrivMsg();
 		privMsg.source = this.nickname;
 		privMsg.target = target;
@@ -75,7 +75,7 @@ public class Bot {
 	}
 
 	public void say(String destination, String message) {
-		this.privMSg(destination, message);
+		this.privMsg(destination, message);
 	}
 
 	public void part(String channel) {
