@@ -2,6 +2,7 @@ package net.mms_projects.irc.channel_bots.irc;
 
 import java.util.ArrayList;
 
+import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.irc.commands.Away;
 import net.mms_projects.irc.channel_bots.irc.commands.EOS;
 import net.mms_projects.irc.channel_bots.irc.commands.Join;
@@ -21,11 +22,17 @@ import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 
 public class Handler {
 
+	private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 	private ArrayList<PingPongListener> pingPongListeners = new ArrayList<PingPongListener>();
 	private ArrayList<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
 	private ArrayList<NetworkListener> networkListeners = new ArrayList<NetworkListener>();
 	private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
-
+	private ArrayList<Manager> managers = new ArrayList<Manager>();
+	
+	public void addPlugin (Plugin plugin) {
+		this.plugins.add(plugin);
+	}
+	
 	public void addPingPongListener(PingPongListener listener) {
 		this.pingPongListeners.add(listener);
 	}
@@ -43,6 +50,10 @@ public class Handler {
 
 	}
 
+	public void addManager(Manager manager) {
+		this.managers.add(manager);
+	}
+	
 	public void handle(Command command) {
 		System.out.println("Rebuild: \"" + command.build() + "\"");
 
@@ -105,6 +116,15 @@ public class Handler {
 			for (ChannelListener listener : this.channelListeners) {
 				listener.topicChanged((Topic) command);
 			}
+		}
+	}
+
+	public void tick() {
+		for (Manager manager : managers) {
+			manager.tick();
+		}
+		for (Plugin plugin : plugins) {
+			plugin.tick();
 		}
 	}
 

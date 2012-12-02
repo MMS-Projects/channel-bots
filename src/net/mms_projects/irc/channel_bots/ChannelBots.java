@@ -104,6 +104,32 @@ public class ChannelBots {
 				}
 			}
 		}).start();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run () {
+				long now, lastTime = System.currentTimeMillis();
+				double unprocessed = 0.0;
+				int TPS = 100; //Ticks per second
+				long delta;
+				for(;;) {
+					now = System.currentTimeMillis();
+					delta = now - lastTime;
+					lastTime = now;
+					
+					unprocessed += delta / (1000.0 / TPS);
+					while (unprocessed > 1.0) {
+						unprocessed--;
+						handler.tick();
+					}
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
 	}
 
 	static public void main(String[] args) {
