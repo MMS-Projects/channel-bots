@@ -1,6 +1,7 @@
 package net.mms_projects.irc.channel_bots.irc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mms_projects.irc.channel_bots.Manager;
 import net.mms_projects.irc.channel_bots.Plugin;
@@ -26,14 +27,14 @@ import net.mms_projects.irc.channel_bots.listeners.UserUpdateListener;
 
 public class Handler {
 
-	private ArrayList<Plugin> plugins = new ArrayList<Plugin>();
-	private ArrayList<Manager> managers = new ArrayList<Manager>();
+	private List<Plugin> plugins = new ArrayList<Plugin>();
+	private List<Manager> managers = new ArrayList<Manager>();
 	
-	private ArrayList<PingPongListener> pingPongListeners = new ArrayList<PingPongListener>();
-	private ArrayList<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
-	private ArrayList<NetworkListener> networkListeners = new ArrayList<NetworkListener>();
-	private ArrayList<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
-	private ArrayList<MessageListener> messageListeners = new ArrayList<MessageListener>();
+	private List<PingPongListener> pingPongListeners = new ArrayList<PingPongListener>();
+	private List<UserUpdateListener> userUpdateListeners = new ArrayList<UserUpdateListener>();
+	private List<NetworkListener> networkListeners = new ArrayList<NetworkListener>();
+	private List<ChannelListener> channelListeners = new ArrayList<ChannelListener>();
+	private List<MessageListener> messageListeners = new ArrayList<MessageListener>();
 
 	public void addPlugin(Plugin plugin) {
 		this.plugins.add(plugin);

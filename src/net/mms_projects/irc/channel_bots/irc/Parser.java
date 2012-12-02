@@ -1,12 +1,13 @@
 package net.mms_projects.irc.channel_bots.irc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.mms_projects.irc.channel_bots.irc.commands.UnknownCommand;
 
 public class Parser {
 
-	private ArrayList<Command> commands = new ArrayList<Command>();
+	private List<Command> commands = new ArrayList<Command>();
 	
 	public void addCommand(Command command) {
 		this.commands.add(command);
