@@ -132,15 +132,15 @@ public class Main extends Plugin implements PingPongListener,
 		Channel channel = this.channelList.getChannelByName(event.channel);
 		User user = this.userList.getUserByName(event.nickname);
 		channel.removeUser(user);
-		if (channel.users.size() == 0) this.channelList.remove(channel);
+		if (channel.users.size() == 0)
+			this.channelList.remove(channel);
 	}
 
 	@Override
 	public void topicChanged(
 			net.mms_projects.irc.channel_bots.irc.commands.Topic event) {
 		Topic topic = new Topic(event.nickname, event.timestamp, event.text);
-		this.channelList
-				.updateTopic(event.channel, topic);
+		this.channelList.updateTopic(event.channel, topic);
 	}
 
 }

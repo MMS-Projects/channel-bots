@@ -21,6 +21,7 @@ import net.mms_projects.irc.channel_bots.irc.commands.SetHost;
 import net.mms_projects.irc.channel_bots.irc.commands.Topic;
 import net.mms_projects.irc.channel_bots.plugins.EventDebug;
 import net.mms_projects.irc.channel_bots.plugins.Main;
+import net.mms_projects.irc.channel_bots.plugins.ProgrammableBots;
 
 public class ChannelBots {
 
@@ -87,6 +88,7 @@ public class ChannelBots {
 				channelList, serverList);
 		/* final Plugin eventDebug = */new EventDebug(socket, handler,
 				userList, channelList, serverList);
+		new ProgrammableBots(socket, handler, userList, channelList, serverList);
 
 		new Thread(new Runnable() {
 			@Override
