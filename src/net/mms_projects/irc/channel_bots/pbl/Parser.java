@@ -19,6 +19,10 @@ public class Parser {
 	
 	public Parser(Handler handler) {
 		this.handler = handler;
+		
+		for (Function function : this.handler.functions) {
+			function.setParser(this);
+		}
 	}
 	
 	public String parse(String rawdata) {
