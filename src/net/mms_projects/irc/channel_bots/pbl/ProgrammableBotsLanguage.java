@@ -2,7 +2,7 @@ package net.mms_projects.irc.channel_bots.pbl;
 
 public class ProgrammableBotsLanguage {
 
-	private Parser parser = new Parser(new Handler());;
+	private Parser parser;
 	
 	/**
 	 * @param args
@@ -11,23 +11,32 @@ public class ProgrammableBotsLanguage {
 		new ProgrammableBotsLanguage();
 	}
 	
-	public ProgrammableBotsLanguage() {
-		this.parse("START $a(a,(a,b)) END");
-		this.parse("START Het is $time END");
-		this.parse("START Het is $time of niet? END");
-		this.parse("START $identifier(argument1,argument2).property END");
-		this.parse("START $replace(Kijk een mooie tekst, mooie, lelijke) END");
-		this.parse("START $identifier(argument1,argument2,argument3) END");
-		this.parse("START $identifier(argument1, argument2) END");
-		this.parse("START $identifier(argument1, argument2,argument3) END");
+	public ProgrammableBotsLanguage() {	
+		Handler handler = new Handler();
+		handler.setVariable("internal.testvariable", "Test value?");
+		handler.setVariable("internal.irc.nick", "Awesome-User");
+		handler.setVariable("internal.irc.chan", "#test");
+		handler.setVariable("internal.irc.me", "PBL-TestBot");
 		
-		this.parse("START Hai :) $identifier(argument1, argument2,argument3) Hoe is het END");
+		this.parser = new Parser(handler);
+		this.parse("$a(a,(a,b))");
+		this.parse("Het is $time");
+		this.parse("Het is $time of niet?");
+		this.parse("$identifier(argument1,argument2).property");
+		this.parse("$replace(Kijk een mooie tekst, mooie, lelijke)");
+		this.parse("$identifier(argument1,argument2,argument3)");
+		this.parse("$identifier(argument1, argument2)");
+		this.parse("$identifier(argument1, argument2,argument3)");
 		
-		this.parse("START $chr($calc(10+10)) END");
+		this.parse("Hai :) $identifier(argument1, argument2,argument3) Hoe is het");
+		
+		this.parse("$chr($calc(10+10))");
+		
+		this.parse("%internal.testvariable");
 	}
 	
 	public void parse(String rawdata) {
-		String input = rawdata;
+		String input = "START " + rawdata + " END";
 		String output = this.parser.parse(input);
 		
 	}

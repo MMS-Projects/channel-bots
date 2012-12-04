@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Stack;
 
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
+import net.mms_projects.irc.channel_bots.pbl.language_entities.Variable;
 
 public class Parser {
 
@@ -28,6 +29,7 @@ public class Parser {
 		int identifierType = 0;
 		
 		Identifier currentIdentifier = null;
+		Variable currentVariable = null;
 		
 		List<Character> input = new ArrayList<Character>(); 
 		for (Character c : rawdata.toCharArray()) {
@@ -35,6 +37,7 @@ public class Parser {
 		}
 		int dataStart = 0;
 		int identifierStart = 0;
+		int entityStart = 0;
 		int parenthesesCount = 0;
 		
 		for (int i = 0; i < input.size(); ++i) {
@@ -46,6 +49,10 @@ public class Parser {
 					
 					identifierType = Identifier.TYPE_NORMAL;
 				}
+			}
+			if (input.get(i) == '%') {
+				currentVariable = new Variable();
+				entityStart = i;
 			}
 			if (input.get(i) == '(') {
 				++parenthesesCount;
@@ -111,6 +118,16 @@ public class Parser {
 					
 					currentIdentifier = null;
 					identifierType = 0;
+				}
+				if (currentVariable != null) {
+					currentVariable.name = getPart(input, entityStart + 1, i);
+					
+					List<Character> output = this.handler.handle(currentVariable);
+					System.out.println(currentVariable.dump());
+					input = replacePart(input, entityStart, i, output);
+					i = entityStart;
+					
+					currentVariable = null;
 				}
 			}
 		}
