@@ -94,7 +94,7 @@ public class Parser {
 					List<Character> output = this.handler.handle(currentIdentifier);
 					System.out.println(currentIdentifier.dump());
 					input = replacePart(input, identifierStart, i, output);
-					i = i - (output.size() + 1);
+					i = identifierStart;
 					
 					currentIdentifier = null;
 					identifierType = 0;
@@ -107,7 +107,7 @@ public class Parser {
 					List<Character> output = this.handler.handle(currentIdentifier);
 					System.out.println(currentIdentifier.dump());
 					input = replacePart(input, identifierStart, i, output);
-					i = i - (output.size() + 1);
+					i = identifierStart;
 					
 					currentIdentifier = null;
 					identifierType = 0;
