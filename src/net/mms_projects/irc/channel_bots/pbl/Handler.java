@@ -5,7 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.mms_projects.irc.channel_bots.pbl.identifiers.Asc;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Chan;
+import net.mms_projects.irc.channel_bots.pbl.identifiers.Chr;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Ctime;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Me;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Nick;
@@ -26,6 +28,8 @@ public class Handler {
 		this.functions.add(new Chan());
 		this.functions.add(new Nick());
 		this.functions.add(new Me());
+		this.functions.add(new Asc());
+		this.functions.add(new Chr());
 		
 		this.setVariable("internal.testvariable", "Test value?");
 		
