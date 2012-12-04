@@ -3,6 +3,7 @@ package net.mms_projects.irc.channel_bots.pbl;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.mms_projects.irc.channel_bots.pbl.identifiers.Replace;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Time;
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
 
@@ -12,6 +13,7 @@ public class Handler {
 	
 	public Handler() {
 		this.functions.add(new Time());
+		this.functions.add(new Replace());
 	}
 	
 	public List<Character> handle(Identifier identifier) {
