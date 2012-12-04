@@ -18,7 +18,20 @@ public class Identifier extends LanguageEntity {
 	public static int TYPE_PROPERTY = 3;
 	
 	public Identifier() {
-		arguments = new ArrayList<String>();
+		this.arguments = new ArrayList<String>();
+	}
+	
+	public Identifier(String name) {
+		this.name = name;
+		this.arguments = new ArrayList<String>();
+	}
+	
+	public Identifier(String name, String... arguments) {
+		this.name = name;
+		this.arguments = new ArrayList<String>();
+		for (String argument : arguments) {
+			this.arguments.add(argument);
+		}
 	}
 	
 	public String dump() {
