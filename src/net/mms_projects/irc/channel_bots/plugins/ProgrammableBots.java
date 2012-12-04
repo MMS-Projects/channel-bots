@@ -16,11 +16,15 @@ import net.mms_projects.irc.channel_bots.pbl.Parser;
 public class ProgrammableBots extends Plugin implements MessageListener {
 	public ServiceManager manager;
 	public Bot pbot;
-	public Parser pblParser = new Parser(new net.mms_projects.irc.channel_bots.pbl.Handler());
+	public net.mms_projects.irc.channel_bots.pbl.Handler pblHandler;
+	public Parser pblParser;
 	
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
 		super(socket, handler, userList, channelList, serverList);
+		
+		this.pblHandler = new net.mms_projects.irc.channel_bots.pbl.Handler();
+		this.pblParser = new Parser(this.pblHandler);
 		
 		this.manager = new ServiceManager(socket, handler, userList, channelList, serverList);
 		handler.addManager(this.manager);
@@ -28,6 +32,8 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 		
 		pbot = new Bot("PBot", "Programmable Bot interface", "P-Bot",
 				"channel-bot.mms-projects.net");
+		
+		this.pblHandler.setVariable("internal.irc.me", pbot.nickname);
 		this.manager.newBot(pbot);
 		pbot.join("#test");
 	}
@@ -39,6 +45,9 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 	@Override
 	public void onPrivMsg(PrivMsg event) {
 		if (event.target.equalsIgnoreCase("#test")) {
+			this.pblHandler.setVariable("internal.irc.chan", event.target);
+			this.pblHandler.setVariable("internal.irc.nick", event.source);
+			
 			this.pbot.privMsg(event.target, this.pblParser.parse(event.text));
 		}
 	}
