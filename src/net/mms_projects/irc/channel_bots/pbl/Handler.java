@@ -27,6 +27,8 @@ public class Handler {
 		this.functions.add(new Nick());
 		this.functions.add(new Me());
 		
+		this.setVariable("internal.testvariable", "Test value?");
+		
 		for (Function function : this.functions) {
 			function.setHandler(this);
 		}

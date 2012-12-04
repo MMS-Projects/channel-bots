@@ -13,7 +13,6 @@ public class ProgrammableBotsLanguage {
 	
 	public ProgrammableBotsLanguage() {	
 		Handler handler = new Handler();
-		handler.setVariable("internal.testvariable", "Test value?");
 		handler.setVariable("internal.irc.nick", "Awesome-User");
 		handler.setVariable("internal.irc.chan", "#test");
 		handler.setVariable("internal.irc.me", "PBL-TestBot");
