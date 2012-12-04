@@ -1,93 +1,124 @@
 package net.mms_projects.irc.channel_bots.pbl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
 
 public class Parser {
 
+	private Handler handler;
+	
 	char[] endOfIdentifier = {' ', '\n'}; 
 	char[] identifierArgumentStart = {'('};
 	char[] identifierArgumentSeparator = {','};
 	char[] identifierArgumentEnd = {')'};
 	
-	Stack<LanguageEntity> stack;
+	public Parser(Handler handler) {
+		this.handler = handler;
+	}
 	
 	public String parse(String rawdata) {
-		stack = new Stack<LanguageEntity>();
+		System.out.println("Input: " + rawdata);
+		
 		rawdata += "\n";
 		
-		boolean inIdentifier = false;
-		boolean inArguments = false;
-		boolean inArgument = false;
-		boolean inName = false;
-		boolean hadArguments = false;
-		boolean spaceCancel = true;
+		int identifierType = 0;
 		
 		Identifier currentIdentifier = null;
-		String currentArgument = "";
-		for (char character : rawdata.toCharArray()) {
-			if (!inIdentifier) {
-				if (character == '$') {
+		
+		List<Character> input = new ArrayList<Character>(); 
+		for (Character c : rawdata.toCharArray()) {
+			input.add(c);
+		}
+		int dataStart = 0;
+		int identifierStart = 0;
+		int parenthesesCount = 0;
+		
+		for (int i = 0; i < input.size(); ++i) {
+			if (input.get(i) == '$') {
+				if (identifierType == 0) {
 					currentIdentifier = new Identifier();
-					stack.add(currentIdentifier);
-					inIdentifier = true;
-					inName = true;
-					spaceCancel = true;
-					hadArguments = false;
-					continue;
+					dataStart = i;
+					identifierStart = i;
+					
+					identifierType = Identifier.TYPE_NORMAL;
 				}
 			}
-			if (inIdentifier) {
-				if (contains(identifierArgumentStart, character)) {
-					inArguments = true;
-					inArgument = true;
-					inName = false;
-					hadArguments = true;
-					spaceCancel = false;
+			if (input.get(i) == '(') {
+				++parenthesesCount;
+				if ((identifierType == Identifier.TYPE_NORMAL) && (parenthesesCount == 1)) {
+					currentIdentifier.name = getPart(input, dataStart + 1, i);
+					dataStart = i;
 					
-					continue;
+					identifierType = Identifier.TYPE_PARAMETERS;
 				}
-				if (contains(identifierArgumentSeparator, character)) {
-					currentIdentifier.arguments.add(currentArgument.trim());
-					currentArgument = "";
+			}
+			if (input.get(i) == ',') {
+				if (identifierType == Identifier.TYPE_PARAMETERS) {
+					currentIdentifier.arguments.add(this.parse(getPart(input, dataStart + 1, i)));
+					dataStart = i;
+				}
+			}
+			if (input.get(i) == ')') {
+				if ((identifierType == Identifier.TYPE_PARAMETERS) && (parenthesesCount == 1)) {
+					currentIdentifier.arguments.add(this.parse(getPart(input, dataStart + 1, i)));
 					
-					continue;
+					if ((input.size() > i + 1) && (input.get(i + 1) == '.')) {						
+						dataStart = i + 1;
+						
+						identifierType = Identifier.TYPE_PROPERTY;
+					} else {
+						currentIdentifier.unparsed = getPart(input, identifierStart, i + 1);
+						
+						List<Character> output = this.handler.handle(currentIdentifier);
+						System.out.println("Parenthese ending " + output.size() + " - " + (i - identifierStart));
+						System.out.println(currentIdentifier.dump());
+						input = replacePart(input, identifierStart, i + 1, output);
+						i = identifierStart;
+						
+						currentIdentifier = null;
+						identifierType = 0;
+					}
 				}
-				if (contains(identifierArgumentEnd, character)) {
-					inArguments = false;
-					inArgument = false;
-					inIdentifier = false;
+				--parenthesesCount;
+			}
+			if ((input.get(i) == ' ') || (input.get(i) == '\n')) {
+				if (identifierType == Identifier.TYPE_NORMAL) {
+					currentIdentifier.name = getPart(input, dataStart + 1, i);
+					currentIdentifier.unparsed = getPart(input, identifierStart, i);
 					
-					currentIdentifier.arguments.add(currentArgument.trim());
-					currentArgument = "";
+					System.out.println("Normal ending");
+					List<Character> output = this.handler.handle(currentIdentifier);
+					System.out.println(currentIdentifier.dump());
+					input = replacePart(input, identifierStart, i, output);
+					i = i - (output.size() + 1);
 					
-					System.out.println(stack.pop().dump());
+					currentIdentifier = null;
+					identifierType = 0;
 				}
-				
-				
-				
-				if ((spaceCancel) && (character == ' ')) {
-					inIdentifier = false;
-					inName = false;
-					System.out.println(currentIdentifier.name);
-					System.out.println(stack.pop().dump());
+				if (identifierType == Identifier.TYPE_PROPERTY) {
+					currentIdentifier.property = getPart(input, dataStart + 1, i);
+					currentIdentifier.unparsed = getPart(input, identifierStart, i);
+					
+					System.out.println("Property ending");
+					List<Character> output = this.handler.handle(currentIdentifier);
+					System.out.println(currentIdentifier.dump());
+					input = replacePart(input, identifierStart, i, output);
+					i = i - (output.size() + 1);
+					
+					currentIdentifier = null;
+					identifierType = 0;
 				}
-				if (character == '\n') {
-					inIdentifier = false;
-					inName = false;
-					System.out.println(currentIdentifier.name);
-					System.out.println(stack.pop().dump());
-				}
-				
-				if (inName) {
-					currentIdentifier.name += character;
-				}
-				if (inArgument) {
-					currentArgument += character;
-				}
- 			}
+			}
 		}
+		
+		rawdata = getPart(input, 0, input.size() - 1).trim();
+		
+		System.out.println("Output: " + rawdata);
+		System.out.println("----------");
 		return rawdata;
 	}
 	
@@ -98,6 +129,30 @@ public class Parser {
 			}
 		}
 		return false;
+	}
+	
+	public String getPart(List<Character> heystack, int start, int end) {
+		String value = "";
+		for (int i = start; i < end; ++i) {
+			value += heystack.get(i);
+		}
+ 		return value;
+	}
+	
+	public List<Character> getPartList(List<Character> heystack, int start, int end) {
+		List<Character> list = new ArrayList<Character>();
+		for (int i = start; i < end; ++i) {
+			list.add(heystack.get(i));
+		}
+ 		return list;
+	}
+	
+	public List<Character> replacePart(List<Character> heystack, int start, int end, List<Character> replacement) {
+		for (int i = start; i < end; ++i) {
+			heystack.remove(start);
+		}
+		heystack.addAll(start, replacement);
+		return heystack;
 	}
 	
 }

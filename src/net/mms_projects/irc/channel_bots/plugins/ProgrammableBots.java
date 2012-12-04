@@ -16,7 +16,7 @@ import net.mms_projects.irc.channel_bots.pbl.Parser;
 public class ProgrammableBots extends Plugin implements MessageListener {
 	public ServiceManager manager;
 	public Bot pbot;
-	public Parser pblParser = new Parser();
+	public Parser pblParser = new Parser(new net.mms_projects.irc.channel_bots.pbl.Handler());
 	
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
