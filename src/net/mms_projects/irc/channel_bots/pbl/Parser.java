@@ -54,9 +54,11 @@ public class Parser {
 					identifierType = Identifier.TYPE_NORMAL;
 				}
 			}
-			if (input.get(i) == '%') {
-				currentVariable = new Variable();
-				entityStart = i;
+			if (currentIdentifier == null ) {
+				if (input.get(i) == '%') {
+					currentVariable = new Variable();
+					entityStart = i;
+				}
 			}
 			if (input.get(i) == '(') {
 				++parenthesesCount;
