@@ -32,6 +32,9 @@ public class ProgrammableBotsLanguage {
 		this.parse("$chr($calc(10+10))");
 		
 		this.parse("%internal.testvariable");
+		
+		this.parse("$eval($chr(36) $+ time, 2)");
+		this.parse("$+($chr(36), time)");
 	}
 	
 	public void parse(String rawdata) {

@@ -11,7 +11,12 @@ public class Chr extends Function {
 	
 	@Override
 	public String run(Identifier identifier) {
-		int ascii = Integer.parseInt(identifier.arguments.get(0));
+		int ascii;
+		try {
+			ascii = Integer.parseInt(identifier.arguments.get(0));
+		} catch (NumberFormatException e) {
+			return "";
+		}
 		char character = (char) ascii;
 		return Character.toString(character);
 	}
