@@ -34,7 +34,7 @@ public class PblParserTest {
 	}
 	
 	private void parseTest(String expected, String input) {
-		assertEquals(expected, parser.parse(input));
+		assertEquals(expected, parser.eval(input));
 	}
 
 }

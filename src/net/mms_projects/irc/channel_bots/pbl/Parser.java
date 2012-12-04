@@ -25,7 +25,7 @@ public class Parser {
 		}
 	}
 	
-	public String parse(String rawdata) {
+	public String eval(String rawdata) {
 		System.out.println("Input: " + rawdata);
 		
 		rawdata += "\n";
@@ -71,13 +71,13 @@ public class Parser {
 			}
 			if (input.get(i) == ',') {
 				if (identifierType == Identifier.TYPE_PARAMETERS) {
-					currentIdentifier.arguments.add(this.parse(getPart(input, dataStart + 1, i)));
+					currentIdentifier.arguments.add(this.eval(getPart(input, dataStart + 1, i)));
 					dataStart = i;
 				}
 			}
 			if (input.get(i) == ')') {
 				if ((identifierType == Identifier.TYPE_PARAMETERS) && (parenthesesCount == 1)) {
-					currentIdentifier.arguments.add(this.parse(getPart(input, dataStart + 1, i)));
+					currentIdentifier.arguments.add(this.eval(getPart(input, dataStart + 1, i)));
 					
 					if ((input.size() > i + 1) && (input.get(i + 1) == '.')) {						
 						dataStart = i + 1;

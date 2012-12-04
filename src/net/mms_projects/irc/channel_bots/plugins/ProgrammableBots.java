@@ -48,7 +48,7 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 			this.pblHandler.setVariable("internal.irc.chan", event.target);
 			this.pblHandler.setVariable("internal.irc.nick", event.source);
 			
-			this.pbot.privMsg(event.target, this.pblParser.parse(event.text));
+			this.pbot.privMsg(event.target, this.pblParser.eval(event.text));
 		}
 	}
 

@@ -36,7 +36,7 @@ public class ProgrammableBotsLanguage {
 	
 	public void parse(String rawdata) {
 		String input = "START " + rawdata + " END";
-		String output = this.parser.parse(input);
+		String output = this.parser.eval(input);
 		
 	}
 }

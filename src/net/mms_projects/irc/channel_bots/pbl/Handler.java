@@ -9,6 +9,7 @@ import net.mms_projects.irc.channel_bots.pbl.identifiers.Asc;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Chan;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Chr;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Ctime;
+import net.mms_projects.irc.channel_bots.pbl.identifiers.Eval;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Me;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Nick;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Replace;
@@ -30,6 +31,7 @@ public class Handler {
 		this.functions.add(new Me());
 		this.functions.add(new Asc());
 		this.functions.add(new Chr());
+		this.functions.add(new Eval());
 		
 		this.setVariable("internal.testvariable", "Test value?");
 		
