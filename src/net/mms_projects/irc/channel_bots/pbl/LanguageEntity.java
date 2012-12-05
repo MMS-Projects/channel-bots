@@ -12,8 +12,11 @@ public abstract class LanguageEntity {
 	
 	abstract public String getOutput();
 	
-	public String dump() {
-		return null;
+	final public void dump() {
+		this.dump("");
+	}
+	
+	public void dump(String prefix) {
 	}
 	
 }

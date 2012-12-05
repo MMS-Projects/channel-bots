@@ -13,6 +13,9 @@ public class Eval extends Function {
 	public String run(Identifier identifier) {
 		int times = (identifier.arguments.size() > 1) ? Integer
 				.parseInt(identifier.arguments.get(1)) : 1;
+		//if (identifier.arguments.size() == 0) {
+		//	return "";
+		//}
 		String data = identifier.arguments.get(0);
 		return this.parser.eval(data, times);
 	}
