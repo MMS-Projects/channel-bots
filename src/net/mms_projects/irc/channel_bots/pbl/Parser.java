@@ -77,7 +77,8 @@ public class Parser {
 				}
 			}
 			if (input.get(i) == ',') {
-				if (identifierType == Identifier.TYPE_PARAMETERS) {
+				if ((identifierType == Identifier.TYPE_PARAMETERS)
+						&& (parenthesesCount == 1)) {
 					currentIdentifier.arguments.add(this.eval(getPart(input,
 							dataStart + 1, i)));
 					dataStart = i;
