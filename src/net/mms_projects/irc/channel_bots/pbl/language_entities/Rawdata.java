@@ -20,31 +20,27 @@ public class Rawdata extends LanguageEntity {
 	}
 	
 	@Override
-	public String dump() {
+	public void dump(String prefix) {
 		int i = 0;
 		for (LanguageEntity entity : this.data) {
-			//System.out.println("Data " + (i + 1) + ": \"" + entity + "\"");
-			entity.dump();
+			System.out.println(prefix + "Data " + (i + 1) + ": " + entity.getClass().getSimpleName());
+			entity.dump(prefix + "    ");
 			++i;
 		}
-		return null;
 	}
 
 	@Override
 	public String getOutput() {
 		String output = "";
-		int i = 0;
 		for (LanguageEntity entity : this.data) {
 			if (entity != null) {
 				output += entity.getOutput();
 			} else {
 				output += null;
 			}
-			++i;
 		}
 		output = output.replace(" " + Append.character + " ", "");
 		return output;
 	}
 	
 }
-;

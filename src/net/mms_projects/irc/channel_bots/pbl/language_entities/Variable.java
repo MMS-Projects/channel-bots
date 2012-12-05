@@ -13,8 +13,7 @@ public class Variable extends LanguageEntity {
 	public String name;
 	
 	@Override
-	public String dump() {
-		return null;
+	public void dump(String prefix) {
 	}
 
 	@Override

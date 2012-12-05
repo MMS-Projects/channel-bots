@@ -11,6 +11,11 @@ public class Text extends LanguageEntity {
 	}
 
 	public String text = "";
+
+	@Override
+	public void dump(String prefix) {
+		System.out.println(prefix + "Text: " + this.text);
+	}
 	
 	@Override
 	public String toString() {

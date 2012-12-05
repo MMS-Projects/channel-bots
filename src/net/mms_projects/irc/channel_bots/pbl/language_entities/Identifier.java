@@ -23,19 +23,18 @@ public class Identifier extends LanguageEntity {
 	public static int TYPE_PARAMETERS = 2;
 	public static int TYPE_PROPERTY = 3;
 	
-	public String dump() {
-		System.out.println("Name: \"" + name + "\"");
+	public void dump(String prefix) {
+		System.out.println(prefix + "Name: \"" + name + "\"");
 		int i = 0;
 		for (String argument : arguments) {
-			System.out.println("Argument " + (i + 1) + ": \"" + argument + "\"");
+			System.out.println(prefix + "Argument " + (i + 1) + ": \"" + argument + "\"");
 			++i;
 		}
 		if (this.property != null) {
-			System.out.println("Property: \"" + this.property + "\"");
+			System.out.println(prefix + "Property: \"" + this.property + "\"");
 		}
-		System.out.println("Unparsed: " + this.unparsed);
-		System.out.println("Output: " + this.getOutput());
-		return "";
+		System.out.println(prefix + "Unparsed: " + this.unparsed);
+		System.out.println(prefix + "Output: " + this.getOutput());
 	}
 	
 	@Override
