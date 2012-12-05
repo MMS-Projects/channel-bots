@@ -27,10 +27,11 @@ public class PblParserTest {
 		parseTest("test2", "$replace(test1, test1, test2)");
 		parseTest("65", "$asc(A)");
 		parseTest("A", "$chr(65)");
-		//parseTest("65", "$asc($replace(B, B, A))");
+		parseTest("65", "$asc($replace(B, B, A))");
 		parseTest("Test value?", "%internal.testvariable");
 		parseTest("Leuke value?", "$replace(%internal.testvariable, Test, Leuke)");
-		
+		parseTest("$time", "$+($chr(36), time)");
+		parseTest("Test value?", "$eval($+(%%, internal.testvariable), 2)");
 	}
 	
 	private void parseTest(String expected, String input) {
