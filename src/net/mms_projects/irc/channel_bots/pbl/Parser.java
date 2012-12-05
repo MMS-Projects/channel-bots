@@ -48,8 +48,11 @@ public class Parser {
 			if (input.get(i) == '$') {
 				if ((input.size() > i + 1) && (input.get(i + 1) == '+')
 						&& (input.size() > i + 2) && (input.get(i + 2) != '(')) {
-					input = replacePart(input, i - 1, i + 3,
-							new ArrayList<Character>());
+					List<Character> replacement = new ArrayList<Character>();
+					replacement.add(' ');
+					replacement.add('\u5001');
+					replacement.add(' ');
+					input = replacePart(input, i - 1, i + 3, replacement);
 					continue;
 				}
 				if (identifierType == 0) {
@@ -100,9 +103,7 @@ public class Parser {
 
 						List<Character> output = this.handler
 								.handle(currentIdentifier);
-						System.out.println("Parenthese ending " + output.size()
-								+ " - " + (i - identifierStart));
-						System.out.println(currentIdentifier.dump());
+						currentIdentifier.dump();
 						input = replacePart(input, identifierStart, i + 1,
 								output);
 						i = identifierStart;
@@ -119,10 +120,9 @@ public class Parser {
 					currentIdentifier.unparsed = getPart(input,
 							identifierStart, i);
 
-					System.out.println("Normal ending");
 					List<Character> output = this.handler
 							.handle(currentIdentifier);
-					System.out.println(currentIdentifier.dump());
+					currentIdentifier.dump();
 					input = replacePart(input, identifierStart, i, output);
 					i = identifierStart;
 
@@ -135,10 +135,9 @@ public class Parser {
 					currentIdentifier.unparsed = getPart(input,
 							identifierStart, i);
 
-					System.out.println("Property ending");
 					List<Character> output = this.handler
 							.handle(currentIdentifier);
-					System.out.println(currentIdentifier.dump());
+					currentIdentifier.dump();
 					input = replacePart(input, identifierStart, i, output);
 					i = identifierStart;
 
@@ -160,6 +159,7 @@ public class Parser {
 		}
 
 		rawdata = getPart(input, 0, input.size() - 1).trim();
+		rawdata = rawdata.replace(" \u5001 ", "");
 
 		System.out.println("Output: " + rawdata);
 		System.out.println("----------");
