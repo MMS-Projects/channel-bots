@@ -14,10 +14,7 @@ public class Eval extends Function {
 		int times = (identifier.arguments.size() > 1) ? Integer
 				.parseInt(identifier.arguments.get(1)) : 1;
 		String data = identifier.arguments.get(0);
-		for (int i = 0; i < times; ++i) {
-			data = this.parser.eval(data);
-		}
-		return data;
+		return this.parser.eval(data, times);
 	}
 
 }

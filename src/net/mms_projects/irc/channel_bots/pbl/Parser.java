@@ -26,6 +26,14 @@ public class Parser {
 	}
 
 	public String eval(String rawdata) {
+		return eval(rawdata, -1);
+	}
+
+	public String eval(String rawdata, int maxEvaluations) {
+		return eval(rawdata, 0, maxEvaluations);
+	}
+
+	private String eval(String rawdata, int currentEvalation, int maxEvaluations) {
 		System.out.println("Input: " + rawdata);
 
 		rawdata += "\n";
@@ -44,116 +52,126 @@ public class Parser {
 		int entityStart = 0;
 		int parenthesesCount = 0;
 
-		for (int i = 0; i < input.size(); ++i) {
-			if (input.get(i) == '$') {
-				if ((input.size() > i + 1) && (input.get(i + 1) == '+')
-						&& (input.size() > i + 2) && (input.get(i + 2) != '(')) {
-					List<Character> replacement = new ArrayList<Character>();
-					replacement.add(' ');
-					replacement.add('\u5001');
-					replacement.add(' ');
-					input = replacePart(input, i - 1, i + 3, replacement);
-					continue;
-				}
-				if (identifierType == 0) {
-					currentIdentifier = new Identifier();
-					dataStart = i;
-					identifierStart = i;
+		
+		System.out.println(currentEvalation + " - " + maxEvaluations);
+		if ((maxEvaluations < 0) || (currentEvalation < maxEvaluations)) {
+			for (int i = 0; i < input.size(); ++i) {
+				if (input.get(i) == '$') {
+					if ((input.size() > i + 1) && (input.get(i + 1) == '+')
+							&& (input.size() > i + 2)
+							&& (input.get(i + 2) != '(')) {
+						List<Character> replacement = new ArrayList<Character>();
+						replacement.add(' ');
+						replacement.add('\u5001');
+						replacement.add(' ');
+						input = replacePart(input, i - 1, i + 3, replacement);
+						continue;
+					}
+					if (identifierType == 0) {
+						currentIdentifier = new Identifier();
+						dataStart = i;
+						identifierStart = i;
 
-					identifierType = Identifier.TYPE_NORMAL;
+						identifierType = Identifier.TYPE_NORMAL;
+					}
 				}
-			}
-			if (currentIdentifier == null) {
-				if (input.get(i) == '%') {
-					currentVariable = new Variable();
-					entityStart = i;
+				if (currentIdentifier == null) {
+					if (input.get(i) == '%') {
+						currentVariable = new Variable();
+						entityStart = i;
+					}
 				}
-			}
-			if (input.get(i) == '(') {
-				++parenthesesCount;
-				if ((identifierType == Identifier.TYPE_NORMAL)
-						&& (parenthesesCount == 1)) {
-					currentIdentifier.name = getPart(input, dataStart + 1, i);
-					dataStart = i;
+				if (input.get(i) == '(') {
+					++parenthesesCount;
+					if ((identifierType == Identifier.TYPE_NORMAL)
+							&& (parenthesesCount == 1)) {
+						currentIdentifier.name = getPart(input, dataStart + 1,
+								i);
+						dataStart = i;
 
-					identifierType = Identifier.TYPE_PARAMETERS;
+						identifierType = Identifier.TYPE_PARAMETERS;
+					}
 				}
-			}
-			if (input.get(i) == ',') {
-				if ((identifierType == Identifier.TYPE_PARAMETERS)
-						&& (parenthesesCount == 1)) {
-					currentIdentifier.arguments.add(this.eval(getPart(input,
-							dataStart + 1, i)));
-					dataStart = i;
+				if (input.get(i) == ',') {
+					if ((identifierType == Identifier.TYPE_PARAMETERS)
+							&& (parenthesesCount == 1)) {
+						currentIdentifier.arguments.add(this.eval(
+								getPart(input, dataStart + 1, i),
+								currentEvalation + 1, maxEvaluations));
+						dataStart = i;
+					}
 				}
-			}
-			if (input.get(i) == ')') {
-				if ((identifierType == Identifier.TYPE_PARAMETERS)
-						&& (parenthesesCount == 1)) {
-					currentIdentifier.arguments.add(this.eval(getPart(input,
-							dataStart + 1, i)));
+				if (input.get(i) == ')') {
+					if ((identifierType == Identifier.TYPE_PARAMETERS)
+							&& (parenthesesCount == 1)) {
+						currentIdentifier.arguments.add(this.eval(
+								getPart(input, dataStart + 1, i),
+								currentEvalation + 1, maxEvaluations));
 
-					if ((input.size() > i + 1) && (input.get(i + 1) == '.')) {
-						dataStart = i + 1;
+						if ((input.size() > i + 1) && (input.get(i + 1) == '.')) {
+							dataStart = i + 1;
 
-						identifierType = Identifier.TYPE_PROPERTY;
-					} else {
+							identifierType = Identifier.TYPE_PROPERTY;
+						} else {
+							currentIdentifier.unparsed = getPart(input,
+									identifierStart, i + 1);
+
+							List<Character> output = this.handler
+									.handle(currentIdentifier);
+							currentIdentifier.dump();
+							input = replacePart(input, identifierStart, i + 1,
+									output);
+							i = identifierStart;
+
+							currentIdentifier = null;
+							identifierType = 0;
+						}
+					}
+					--parenthesesCount;
+				}
+				if ((input.get(i) == ' ') || (input.get(i) == '\n')) {
+					if (identifierType == Identifier.TYPE_NORMAL) {
+						currentIdentifier.name = getPart(input, dataStart + 1,
+								i);
 						currentIdentifier.unparsed = getPart(input,
-								identifierStart, i + 1);
+								identifierStart, i);
 
 						List<Character> output = this.handler
 								.handle(currentIdentifier);
 						currentIdentifier.dump();
-						input = replacePart(input, identifierStart, i + 1,
-								output);
+						input = replacePart(input, identifierStart, i, output);
 						i = identifierStart;
 
 						currentIdentifier = null;
 						identifierType = 0;
 					}
-				}
-				--parenthesesCount;
-			}
-			if ((input.get(i) == ' ') || (input.get(i) == '\n')) {
-				if (identifierType == Identifier.TYPE_NORMAL) {
-					currentIdentifier.name = getPart(input, dataStart + 1, i);
-					currentIdentifier.unparsed = getPart(input,
-							identifierStart, i);
+					if (identifierType == Identifier.TYPE_PROPERTY) {
+						currentIdentifier.property = getPart(input,
+								dataStart + 1, i);
+						currentIdentifier.unparsed = getPart(input,
+								identifierStart, i);
 
-					List<Character> output = this.handler
-							.handle(currentIdentifier);
-					currentIdentifier.dump();
-					input = replacePart(input, identifierStart, i, output);
-					i = identifierStart;
+						List<Character> output = this.handler
+								.handle(currentIdentifier);
+						currentIdentifier.dump();
+						input = replacePart(input, identifierStart, i, output);
+						i = identifierStart;
 
-					currentIdentifier = null;
-					identifierType = 0;
-				}
-				if (identifierType == Identifier.TYPE_PROPERTY) {
-					currentIdentifier.property = getPart(input, dataStart + 1,
-							i);
-					currentIdentifier.unparsed = getPart(input,
-							identifierStart, i);
+						currentIdentifier = null;
+						identifierType = 0;
+					}
+					if (currentVariable != null) {
+						currentVariable.name = getPart(input, entityStart + 1,
+								i);
 
-					List<Character> output = this.handler
-							.handle(currentIdentifier);
-					currentIdentifier.dump();
-					input = replacePart(input, identifierStart, i, output);
-					i = identifierStart;
+						List<Character> output = this.handler
+								.handle(currentVariable);
+						System.out.println(currentVariable.dump());
+						input = replacePart(input, entityStart, i, output);
+						i = entityStart;
 
-					currentIdentifier = null;
-					identifierType = 0;
-				}
-				if (currentVariable != null) {
-					currentVariable.name = getPart(input, entityStart + 1, i);
-
-					List<Character> output = this.handler
-							.handle(currentVariable);
-					System.out.println(currentVariable.dump());
-					input = replacePart(input, entityStart, i, output);
-					i = entityStart;
-
-					currentVariable = null;
+						currentVariable = null;
+					}
 				}
 			}
 		}
