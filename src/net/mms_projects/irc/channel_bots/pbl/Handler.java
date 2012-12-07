@@ -11,6 +11,7 @@ import net.mms_projects.irc.channel_bots.pbl.identifiers.Chan;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Chr;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Ctime;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Eval;
+import net.mms_projects.irc.channel_bots.pbl.identifiers.Ip;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Me;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Nick;
 import net.mms_projects.irc.channel_bots.pbl.identifiers.Replace;
@@ -33,10 +34,12 @@ public class Handler {
 		this.functions.add(new Asc());
 		this.functions.add(new Chr());
 		this.functions.add(new Eval());
+		this.functions.add(new Ip());
 		
 		this.functions.add(new Append());
 		
 		this.setVariable("internal.testvariable", "Test value?");
+		this.setVariable("internal.ip", "127.0.0.1");
 		
 		for (Function function : this.functions) {
 			function.setHandler(this);
