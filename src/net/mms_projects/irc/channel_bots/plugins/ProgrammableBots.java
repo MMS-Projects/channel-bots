@@ -12,15 +12,24 @@ import net.mms_projects.irc.channel_bots.ServerList;
 import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
+import net.mms_projects.irc.channel_bots.irc.commands.Notice;
+import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
+import net.mms_projects.irc.channel_bots.listeners.MessageListener;
 import net.mms_projects.irc.channel_bots.managers.ServiceManager;
+import net.mms_projects.irc.channel_bots.pb.CommandHandler;
+import net.mms_projects.irc.channel_bots.pb.PassedData;
+import net.mms_projects.irc.channel_bots.pb.commands.Add;
+import net.mms_projects.irc.channel_bots.pb.commands.Help;
+import net.mms_projects.irc.channel_bots.pb.commands.Variable;
 
-public class ProgrammableBots extends Plugin {
+public class ProgrammableBots extends Plugin implements MessageListener {
 	public ServiceManager manager;
 	public Bot pbot;
 
 	Connection connection = null;
 	ResultSet resultSet = null;
 	Statement statement = null;
+	private CommandHandler cmdHandler;
 
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
@@ -40,8 +49,7 @@ public class ProgrammableBots extends Plugin {
 			connection = DriverManager
 					.getConnection("jdbc:sqlite:data/data.db");
 			statement = connection.createStatement();
-			resultSet = statement
-					.executeQuery("SELECT * FROM pb_triggers");
+			resultSet = statement.executeQuery("SELECT * FROM pb_triggers");
 			while (resultSet.next()) {
 				System.out.println("Trigger data:"
 						+ resultSet.getString("data"));
@@ -57,10 +65,33 @@ public class ProgrammableBots extends Plugin {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			cmdHandler = new CommandHandler();
+			cmdHandler.addCommand(new Add(cmdHandler));
+			cmdHandler.addCommand(new Variable(cmdHandler));
+			cmdHandler.addCommand(new Help(cmdHandler));
 		}
+
+		this.handler.addMessageListener(this);
 	}
 
 	public void tick() {
 		super.tick();
+	}
+
+	@Override
+	public void onPrivMsg(PrivMsg event) {
+		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
+			boolean handled = this.cmdHandler.handle(event.text, new PassedData(this.userList,
+					this.channelList, this.serverList, this.pbot, event));
+			if (!handled) {
+				this.pbot.notice(event.source, "No command match >:(");
+			}
+		}
+	}
+
+	@Override
+	public void onNotice(Notice event) {
+		// TODO Auto-generated method stub
+
 	}
 }
