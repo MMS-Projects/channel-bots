@@ -28,7 +28,11 @@ public class Add extends Command {
 
 	@Override
 	public void run(String rawdata, PassedData data) {
-		data.bot.notice(data.event.source, "Added some blabla");
+		boolean handled = this.handle(rawdata, data);
+		if (!handled) {
+			data.bot.notice(data.event.source, "Added some blabla");
+			this.getHelp().run(rawdata, data);
+		}
 	}
 
 }

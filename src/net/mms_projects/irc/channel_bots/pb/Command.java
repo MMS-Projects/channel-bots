@@ -15,6 +15,7 @@ public abstract class Command extends CommandHandler {
 	public List<CommandSyntax> syntaxes = new ArrayList<CommandSyntax>();
 
 	protected CommandHandler handler;
+	protected Help help;
 
 	public Command(String command, String description, CommandHandler handler,
 			Command parent) {
@@ -31,9 +32,14 @@ public abstract class Command extends CommandHandler {
 	}
 
 	public void addHelp() {
-		this.handler.addCommand(new Help(this.handler, this));
+		this.help = new Help(this.handler, this);
+		this.handler.addCommand(this.help);
 	}
 
+	public Help getHelp() {
+		return this.help;
+	}
+	
 	public void addSyntax(CommandSyntax syntax) {
 		this.syntaxes.add(syntax);
 	}
