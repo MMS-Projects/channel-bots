@@ -26,7 +26,15 @@ public class VariableSet extends Command {
 
 	@Override
 	public void run(String rawdata, PassedData data) {
-		data.bot.notice(data.event.source, "Variable bla");
+		String[] tokens = rawdata.split(" ");
+		
+		if (tokens.length < 4) {
+			this.reply(data, "Wrong syntax. The syntax is:");
+			this.getHelp().showSyntax(data);
+			return;
+		}
+		data.pblHandler.setVariable(tokens[2].substring(1), tokens[3]);
+		this.reply(data, "Set " + tokens[2] + " to: " + tokens[3]);
 	}
 
 }

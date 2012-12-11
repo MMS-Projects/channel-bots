@@ -45,19 +45,19 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 				channelList, serverList);
 		handler.addManager(this.manager);
 		handler.addMessageListener(this);
-		
+
 		pbot = new Bot("PBot", "Programmable Bot interface", "P-Bot",
 				"channel-bot.mms-projects.net");
 		this.manager.newBot(pbot);
 		pbot.join("#test");
-		
+
 		this.pblHandler.setVariable("internal.irc.me", pbot.nickname);
 
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
 		cmdHandler.addCommand(new Variable(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
-		
+
 		try {
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager
@@ -95,9 +95,10 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 			this.pbot.privMsg(event.target, this.pblParser.eval(event.text));
 		}
 		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
-			boolean handled = this.cmdHandler.handle(event.text,
-					new PassedData(this.userList, this.channelList,
-							this.serverList, this.pbot, event));
+			boolean handled = this.cmdHandler
+					.handle(event.text, new PassedData(this.userList,
+							this.channelList, this.serverList, this.pbot,
+							event, this.pblHandler));
 			if (!handled) {
 				this.pbot.notice(event.source, "No command match >:(");
 			}
