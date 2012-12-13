@@ -57,6 +57,16 @@ public class Help extends Command {
 			subject.showCommands(data, 2);
 			helped = true;
 		}
+		if (!helped) {
+			helped = this.showSyntax(data);
+		}
+		if (!helped) {
+			this.reply(data, "There is no information available about this command.");
+		}
+	}
+
+	public boolean showSyntax(PassedData data) {
+		boolean helped = false;
 		for (CommandSyntax syntax : this.subject.syntaxes) {
 			String syntaxText = "";
 			for (CommandArgument argument : syntax.arguments) {
@@ -75,11 +85,9 @@ public class Help extends Command {
 			this.reply(data, "Syntax: " + this.subject.getFullCommand() + " " + syntaxText + "");
 			helped = true;
 		}
-		if (!helped) {
-			this.reply(data, "There is no information available about this command.");
-		}
+		return helped;
 	}
-
+	
 	@Override
 	public String getFullCommand() {
 		if (this.subject == this) {
