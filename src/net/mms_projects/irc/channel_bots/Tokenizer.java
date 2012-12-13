@@ -32,6 +32,9 @@ public class Tokenizer {
 		for (int i = start; i <= end; i++) {
 			try {
 				data += this.tokens[i];
+				if (start != end) {
+					data += this.separator;
+				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				if (data.equals("")) {
 					data += null;
@@ -90,6 +93,10 @@ public class Tokenizer {
 				"Tokenizer: Start: " + tokenStart + " - End: " + tokenEnd
 						+ " - Follow up: " + followUp);
 		return new int[] { start, end };
+	}
+	
+	public int size() {
+		return this.tokens.length;
 	}
 
 }
