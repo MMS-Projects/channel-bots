@@ -61,7 +61,8 @@ public class Help extends Command {
 			String syntaxText = "";
 			for (CommandArgument argument : syntax.arguments) {
 				syntaxText += "";
-				if (argument.defaults != null) {
+				if ((argument.defaults != null)
+						&& (argument.defaults.length != 0)) {
 					syntaxText += "[";
 					for (String example : argument.defaults) {
 						syntaxText += example + "/";
