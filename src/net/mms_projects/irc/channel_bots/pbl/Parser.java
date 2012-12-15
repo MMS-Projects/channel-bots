@@ -1,9 +1,7 @@
 package net.mms_projects.irc.channel_bots.pbl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Append;
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
