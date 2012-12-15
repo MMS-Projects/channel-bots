@@ -1,9 +1,7 @@
 package net.mms_projects.irc.channel_bots.pbl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Variable;
@@ -52,7 +50,6 @@ public class Parser {
 		int entityStart = 0;
 		int parenthesesCount = 0;
 
-		
 		System.out.println(currentEvalation + " - " + maxEvaluations);
 		if ((maxEvaluations < 0) || (currentEvalation < maxEvaluations)) {
 			for (int i = 0; i < input.size(); ++i) {

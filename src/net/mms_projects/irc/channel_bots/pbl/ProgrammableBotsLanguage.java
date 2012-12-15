@@ -3,20 +3,20 @@ package net.mms_projects.irc.channel_bots.pbl;
 public class ProgrammableBotsLanguage {
 
 	private Parser parser;
-	
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		new ProgrammableBotsLanguage();
 	}
-	
-	public ProgrammableBotsLanguage() {	
+
+	public ProgrammableBotsLanguage() {
 		Handler handler = new Handler();
 		handler.setVariable("internal.irc.nick", "Awesome-User");
 		handler.setVariable("internal.irc.chan", "#test");
 		handler.setVariable("internal.irc.me", "PBL-TestBot");
-		
+
 		this.parser = new Parser(handler);
 		this.parse("$a(a,(a,b))");
 		this.parse("Het is $time");
@@ -26,20 +26,20 @@ public class ProgrammableBotsLanguage {
 		this.parse("$identifier(argument1,argument2,argument3)");
 		this.parse("$identifier(argument1, argument2)");
 		this.parse("$identifier(argument1, argument2,argument3)");
-		
+
 		this.parse("Hai :) $identifier(argument1, argument2,argument3) Hoe is het");
-		
+
 		this.parse("$chr($calc(10+10))");
-		
+
 		this.parse("%internal.testvariable");
-		
+
 		this.parse("$eval($chr(36) $+ time, 2)");
 		this.parse("$+($chr(36), time)");
 	}
-	
+
 	public void parse(String rawdata) {
 		String input = "START " + rawdata + " END";
 		String output = this.parser.eval(input);
-		
+
 	}
 }

@@ -10,10 +10,10 @@ import com.jolbox.bonecp.BoneCP;
 public class Table {
 
 	public String name;
-	
+
 	protected BoneCP connectionPool;
 	protected boolean initialized = false;
-	
+
 	private String createQuery;
 	private boolean createNonExisting = false;
 
@@ -34,11 +34,11 @@ public class Table {
 		}
 		this.initialized = true;
 	}
-	
+
 	public boolean exists() throws SQLException {
 		Statement statement = this.getConnection().createStatement();
 		try {
-			statement.execute("SELECT * FROM pb_triggers");
+			statement.execute("SELECT * FROM " + this.name);
 		} catch (SQLException e) {
 			if (e.getMessage().contains("no such table")) {
 				return false;
@@ -48,16 +48,16 @@ public class Table {
 		}
 		return true;
 	}
-	
+
 	protected void createTable(String query) throws SQLException {
 		Statement statement = this.getConnection().createStatement();
 		statement.execute(query);
 	}
-	
+
 	protected void createTable() throws SQLException {
 		this.createTable(this.createQuery);
 	}
-	
+
 	protected void setCreateQuery(String query) {
 		this.createQuery = query;
 		this.createNonExisting = true;
@@ -66,9 +66,9 @@ public class Table {
 	public boolean isInitialized() {
 		return this.initialized;
 	}
-	
+
 	protected Connection getConnection() throws SQLException {
 		return this.connectionPool.getConnection();
 	}
-	
+
 }

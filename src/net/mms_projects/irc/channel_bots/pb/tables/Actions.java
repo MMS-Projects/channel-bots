@@ -6,24 +6,24 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mms_projects.irc.channel_bots.Channel;
+import net.mms_projects.irc.channel_bots.pb.Action;
 import net.mms_projects.irc.channel_bots.pb.Table;
 import net.mms_projects.irc.channel_bots.pb.Trigger;
 
 import com.jolbox.bonecp.BoneCP;
 
-public class Triggers extends Table {
+public class Actions extends Table {
 
-	public Triggers(BoneCP connectionPool) {
-		super(connectionPool, "pb_triggers");
-		this.setCreateQuery("CREATE TABLE \"pb_triggers\" ("
-				+ "    \"id\" INTEGER PRIMARY KEY AUTOINCREMENT,"
-				+ "    \"type\" TEXT," + "    \"data\" TEXT,"
-				+ "    \"channel\" TEXT" + ");");
+	public Actions(BoneCP connectionPool) {
+		super(connectionPool, "pb_actions");
+		this.setCreateQuery("CREATE TABLE \"pb_actions\" ("
+				+ "\"id\" INTEGER PRIMARY KEY AUTOINCREMENT, "
+				+ "\"trigger_id\" INTEGER, " + "\"type\" TEXT, "
+				+ "\"data\" TEXT" + ");");
 		this.initialize();
 	}
 
-	public List<Trigger> getChannelTriggers(Channel channel) {
+	public List<Action> getTriggerActions(Trigger trigger) {
 		if (!this.isInitialized()) {
 			new Exception("Table not initialized").printStackTrace();
 		}
@@ -36,19 +36,20 @@ public class Triggers extends Table {
 			e1.printStackTrace();
 		}
 
-		List<Trigger> triggers = new ArrayList<Trigger>();
+		List<Action> actions = new ArrayList<Action>();
 
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = this.getConnection().prepareStatement(
-					"SELECT * FROM pb_triggers WHERE channel LIKE ?");
-			statement.setString(1, channel.name);
+					"SELECT * FROM pb_actions WHERE trigger_id = ?");
+			statement.setInt(1, trigger.id);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				System.out.println("Trigger data:"
-						+ resultSet.getString("data"));
-				triggers.add(Trigger.createTrigger(resultSet.getInt("id"),
+				System.out
+						.println("Action data:" + resultSet.getString("data"));
+				actions.add(Action.create(resultSet.getInt("id"),
+						resultSet.getInt("trigger_id"),
 						resultSet.getString("type"),
 						resultSet.getString("data")));
 			}
@@ -68,7 +69,7 @@ public class Triggers extends Table {
 			}
 
 		}
-		return triggers;
+		return actions;
 	}
 
 }

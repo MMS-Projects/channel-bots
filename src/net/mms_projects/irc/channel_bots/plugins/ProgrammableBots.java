@@ -1,17 +1,9 @@
 package net.mms_projects.irc.channel_bots.plugins;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.slf4j.LoggerFactory;
-
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 
 import net.mms_projects.irc.channel_bots.Bot;
 import net.mms_projects.irc.channel_bots.Channel;
@@ -25,14 +17,19 @@ import net.mms_projects.irc.channel_bots.irc.commands.Notice;
 import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
 import net.mms_projects.irc.channel_bots.listeners.MessageListener;
 import net.mms_projects.irc.channel_bots.managers.ServiceManager;
+import net.mms_projects.irc.channel_bots.pb.Action;
 import net.mms_projects.irc.channel_bots.pb.CommandHandler;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.Trigger;
 import net.mms_projects.irc.channel_bots.pb.commands.Add;
 import net.mms_projects.irc.channel_bots.pb.commands.Help;
 import net.mms_projects.irc.channel_bots.pb.commands.Variable;
+import net.mms_projects.irc.channel_bots.pb.tables.Actions;
 import net.mms_projects.irc.channel_bots.pb.tables.Triggers;
 import net.mms_projects.irc.channel_bots.pbl.Parser;
+
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
 
 public class ProgrammableBots extends Plugin implements MessageListener {
 	public ServiceManager manager;
@@ -40,24 +37,21 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 	public net.mms_projects.irc.channel_bots.pbl.Handler pblHandler;
 	public Parser pblParser;
 
-	Connection connection = null;
-	ResultSet resultSet = null;
-	Statement statement = null;
 	private CommandHandler cmdHandler;
 	private Triggers triggerTable;
+	private Actions actionTable;
 
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
 			ChannelList channelList, ServerList serverList) {
 		super(socket, handler, userList, channelList, serverList);
 
 		Logger.getGlobal().setLevel(Level.ALL);
-		
+
 		this.pblHandler = new net.mms_projects.irc.channel_bots.pbl.Handler();
 		this.pblParser = new Parser(this.pblHandler);
 
 		this.manager = new ServiceManager(socket, handler, userList,
 				channelList, serverList);
-		
 
 		pbot = new Bot("PBot", "Programmable Bot interface", "P-Bot",
 				"channel-bot.mms-projects.net");
@@ -76,9 +70,9 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		BoneCP connectionPool = null;
-		
+
 		try {
 			// setup the connection pool
 			BoneCPConfig config = new BoneCPConfig();
@@ -92,9 +86,10 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		triggerTable = new Triggers(connectionPool);
-		
+		actionTable = new Actions(connectionPool);
+
 		handler.addManager(this.manager);
 		handler.addMessageListener(this);
 	}
@@ -111,11 +106,16 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 			this.pblHandler.setVariable("internal.irc.nick", event.source);
 
 			this.pbot.privMsg(event.target, this.pblParser.eval(event.text));
-			
-			List<Trigger> triggers = this.triggerTable.getChannelTriggers(channel);
+
+			List<Trigger> triggers = this.triggerTable
+					.getChannelTriggers(channel);
+			List<Action> actions = new ArrayList<Action>();
 			for (Trigger trigger : triggers) {
 				if (trigger.matches(event)) {
-					this.pbot.privMsg(event.target, trigger.id + ": " + trigger.data);
+					actions = actionTable.getTriggerActions(trigger);
+					for (Action action : actions) {
+						this.pbot.privMsg(event.target, this.pblParser.eval(action.data));
+					}
 				}
 			}
 		}
