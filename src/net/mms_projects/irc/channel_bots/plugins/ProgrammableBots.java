@@ -27,6 +27,7 @@ import net.mms_projects.irc.channel_bots.pb.CommandHandler;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.Trigger;
 import net.mms_projects.irc.channel_bots.pb.actions.Msg;
+import net.mms_projects.irc.channel_bots.pb.commands.ActionsCommand;
 import net.mms_projects.irc.channel_bots.pb.commands.Add;
 import net.mms_projects.irc.channel_bots.pb.commands.Help;
 import net.mms_projects.irc.channel_bots.pb.commands.Variables;
@@ -70,6 +71,7 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
 		cmdHandler.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(cmdHandler));
+		cmdHandler.addCommand(new ActionsCommand(cmdHandler));
 		cmdHandler.addCommand(new Variables(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
 
