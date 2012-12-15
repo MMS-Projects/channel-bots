@@ -15,6 +15,9 @@ public class Msg extends Trigger {
 
 	@Override
 	public boolean matches(Command command) {
+		if (!(command instanceof PrivMsg)) {
+			return false;
+		}
 		return this.matches((PrivMsg) command);
 	}
 	
