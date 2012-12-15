@@ -69,6 +69,7 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
+		cmdHandler.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(cmdHandler));
 		cmdHandler.addCommand(new Variable(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
 
@@ -121,7 +122,7 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 			boolean handled = this.cmdHandler
 					.handle(event.text, new PassedData(this.userList,
 							this.channelList, this.serverList, this.pbot,
-							event, this.pblHandler));
+							event, this.pblHandler, this.triggerTable));
 			if (!handled) {
 				this.pbot.notice(event.source, "No command match >:(");
 			}
