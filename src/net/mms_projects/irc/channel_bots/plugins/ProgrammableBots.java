@@ -2,6 +2,7 @@ package net.mms_projects.irc.channel_bots.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,9 +28,10 @@ import net.mms_projects.irc.channel_bots.pb.CommandHandler;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.Trigger;
 import net.mms_projects.irc.channel_bots.pb.actions.Msg;
+import net.mms_projects.irc.channel_bots.pb.commands.ActionsCommand;
 import net.mms_projects.irc.channel_bots.pb.commands.Add;
 import net.mms_projects.irc.channel_bots.pb.commands.Help;
-import net.mms_projects.irc.channel_bots.pb.commands.Variable;
+import net.mms_projects.irc.channel_bots.pb.commands.Variables;
 import net.mms_projects.irc.channel_bots.pb.tables.Actions;
 import net.mms_projects.irc.channel_bots.pb.tables.Triggers;
 import net.mms_projects.irc.channel_bots.pbl.Parser;
@@ -49,8 +51,9 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 	private Actions actionTable;
 
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
-			ChannelList channelList, ServerList serverList) {
-		super(socket, handler, userList, channelList, serverList);
+			ChannelList channelList, ServerList serverList,
+			ExecutorService threadPool) {
+		super(socket, handler, userList, channelList, serverList, threadPool);
 
 		Logger.getGlobal().setLevel(Level.ALL);
 
@@ -64,13 +67,17 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 				"channel-bot.mms-projects.net");
 		this.manager.newBot(pbot);
 		pbot.join("#test");
+		pbot.join("#minecraft");
 
 		this.pblHandler.setVariable("internal.irc.me", pbot.nickname);
 
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
-		cmdHandler.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(cmdHandler));
-		cmdHandler.addCommand(new Variable(cmdHandler));
+		cmdHandler
+				.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(
+						cmdHandler));
+		cmdHandler.addCommand(new ActionsCommand(cmdHandler));
+		cmdHandler.addCommand(new Variables(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
 
 		try {
@@ -115,14 +122,15 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 			this.pblHandler.setVariable("internal.irc.nick", event.source);
 
 			this.pbot.privMsg(event.target, this.pblParser.eval(event.text));
-
+		}
+		if (event.target.startsWith("#")) {
 			this.handlePrivMsg(event, event.source, event.target);
 		}
 		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
-			boolean handled = this.cmdHandler
-					.handle(event.text, new PassedData(this.userList,
-							this.channelList, this.serverList, this.pbot,
-							event, this.pblHandler, this.triggerTable));
+			boolean handled = this.cmdHandler.handle(event.text,
+					new PassedData(this.userList, this.channelList,
+							this.serverList, this.pbot, event, this.pblHandler,
+							this.triggerTable));
 			if (!handled) {
 				this.pbot.notice(event.source, "No command match >:(");
 			}
@@ -157,21 +165,31 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 
 	}
 
-	public void handleJoin(Join command, String nickname, String channelName) {
-		Channel channel = this.channelList.getChannelByName(channelName);
+	public void handleJoin(final Join command, final String nickname, String channelName) {
+		final Channel channel = this.channelList.getChannelByName(channelName);
 		this.pblHandler.setVariable("internal.irc.chan", channelName);
 		this.pblHandler.setVariable("internal.irc.nick", nickname);
 
-		this.runTriggers(command, channel, nickname);
+		this.threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				runTriggers(command, channel, nickname);
+			}
+		});
 	}
 
-	public void handlePrivMsg(PrivMsg command, String nickname,
+	public void handlePrivMsg(final PrivMsg command, final String nickname,
 			String channelName) {
-		Channel channel = this.channelList.getChannelByName(channelName);
+		final Channel channel = this.channelList.getChannelByName(channelName);
 		this.pblHandler.setVariable("internal.irc.chan", channelName);
 		this.pblHandler.setVariable("internal.irc.nick", nickname);
 
-		this.runTriggers(command, channel, nickname);
+		this.threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				runTriggers(command, channel, nickname);
+			}
+		});
 	}
 
 	public void runTriggers(Command command, Channel channel, String nickname) {

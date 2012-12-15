@@ -7,9 +7,9 @@ import net.mms_projects.irc.channel_bots.pb.CommandSyntax;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.command_arguments.Text;
 
-public class VariableSet extends Command {
+public class VariablesSet extends Command {
 
-	public VariableSet(CommandHandler handler, Command parent) {
+	public VariablesSet(CommandHandler handler, Command parent) {
 		super("set", "Used to set a variable", handler, parent);
 
 		this.setLongDescription("This sets a channel variable. If a "
@@ -19,11 +19,6 @@ public class VariableSet extends Command {
 				new Text("value")));
 
 		this.addHelp();
-	}
-
-	@Override
-	public boolean match(String rawdata) {
-		return rawdata.startsWith(this.getFullCommand());
 	}
 
 	@Override

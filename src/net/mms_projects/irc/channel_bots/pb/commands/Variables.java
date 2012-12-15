@@ -7,25 +7,20 @@ import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.command_arguments.SubCommand;
 import net.mms_projects.irc.channel_bots.pb.command_arguments.Text;
 
-public class Variable extends Command {
+public class Variables extends Command {
 
-	public Variable(CommandHandler handler) {
-		super("variable", "Used to manage channel variables", handler);
+	public Variables(CommandHandler handler) {
+		super("variables", "Used to manage channel variables", handler);
 		
 		this.setLongDescription("Channel variables allow saving " +
 				"information. This information can be used by " +
 				"triggers and actions. This allows having " +
 				"shorter code and easy maintaining of information.");
 		
-		this.addCommand(new VariableSet(handler, this));
+		this.addCommand(new VariablesSet(handler, this));
 		this.addSyntax(new CommandSyntax(new SubCommand("action", this.commands
 				.toArray(new Command[this.commands.size()]))));
 		this.addHelp();
-	}
-
-	@Override
-	public boolean match(String rawdata) {
-		return rawdata.startsWith(this.getFullCommand());
 	}
 
 	@Override
