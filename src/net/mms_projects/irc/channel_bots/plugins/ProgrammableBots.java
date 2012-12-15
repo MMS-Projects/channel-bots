@@ -2,6 +2,7 @@ package net.mms_projects.irc.channel_bots.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,8 +51,9 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 	private Actions actionTable;
 
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
-			ChannelList channelList, ServerList serverList) {
-		super(socket, handler, userList, channelList, serverList);
+			ChannelList channelList, ServerList serverList,
+			ExecutorService threadPool) {
+		super(socket, handler, userList, channelList, serverList, threadPool);
 
 		Logger.getGlobal().setLevel(Level.ALL);
 
@@ -70,7 +72,9 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
-		cmdHandler.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(cmdHandler));
+		cmdHandler
+				.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(
+						cmdHandler));
 		cmdHandler.addCommand(new ActionsCommand(cmdHandler));
 		cmdHandler.addCommand(new Variables(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
@@ -121,10 +125,10 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 			this.handlePrivMsg(event, event.source, event.target);
 		}
 		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
-			boolean handled = this.cmdHandler
-					.handle(event.text, new PassedData(this.userList,
-							this.channelList, this.serverList, this.pbot,
-							event, this.pblHandler, this.triggerTable));
+			boolean handled = this.cmdHandler.handle(event.text,
+					new PassedData(this.userList, this.channelList,
+							this.serverList, this.pbot, event, this.pblHandler,
+							this.triggerTable));
 			if (!handled) {
 				this.pbot.notice(event.source, "No command match >:(");
 			}
