@@ -1,6 +1,7 @@
 package net.mms_projects.irc.channel_bots.pb;
 
 import net.mms_projects.irc.channel_bots.irc.Command;
+import net.mms_projects.irc.channel_bots.pb.triggers.Join;
 import net.mms_projects.irc.channel_bots.pb.triggers.Msg;
 
 public abstract class Trigger {
@@ -19,6 +20,8 @@ public abstract class Trigger {
 		Trigger trigger = null;
 		if (type.equalsIgnoreCase("msg")) {
 			trigger = new Msg(id, data);
+		} else if (type.equalsIgnoreCase("join")) {
+			trigger = new Join(id, data);
 		}
 		return trigger;
 	}

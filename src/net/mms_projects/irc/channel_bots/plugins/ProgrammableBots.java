@@ -13,8 +13,12 @@ import net.mms_projects.irc.channel_bots.ServerList;
 import net.mms_projects.irc.channel_bots.Socket;
 import net.mms_projects.irc.channel_bots.UserList;
 import net.mms_projects.irc.channel_bots.irc.Handler;
+import net.mms_projects.irc.channel_bots.irc.commands.Join;
 import net.mms_projects.irc.channel_bots.irc.commands.Notice;
+import net.mms_projects.irc.channel_bots.irc.commands.Part;
 import net.mms_projects.irc.channel_bots.irc.commands.PrivMsg;
+import net.mms_projects.irc.channel_bots.irc.commands.Topic;
+import net.mms_projects.irc.channel_bots.listeners.ChannelListener;
 import net.mms_projects.irc.channel_bots.listeners.MessageListener;
 import net.mms_projects.irc.channel_bots.managers.ServiceManager;
 import net.mms_projects.irc.channel_bots.pb.Action;
@@ -31,7 +35,7 @@ import net.mms_projects.irc.channel_bots.pbl.Parser;
 import com.jolbox.bonecp.BoneCP;
 import com.jolbox.bonecp.BoneCPConfig;
 
-public class ProgrammableBots extends Plugin implements MessageListener {
+public class ProgrammableBots extends Plugin implements MessageListener, ChannelListener {
 	public ServiceManager manager;
 	public Bot pbot;
 	public net.mms_projects.irc.channel_bots.pbl.Handler pblHandler;
@@ -82,6 +86,7 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 			config.setPartitionCount(1);
 			config.setUsername("");
 			config.setPassword("");
+			config.setLogStatementsEnabled(true);
 			connectionPool = new BoneCP(config);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,6 +97,7 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 
 		handler.addManager(this.manager);
 		handler.addMessageListener(this);
+		handler.addChannelListener(this);
 	}
 
 	public void tick() {
@@ -133,5 +139,38 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 	@Override
 	public void onNotice(Notice event) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void userJoined(Join event) {
+		for (String channelName : event.channels) {
+			Channel channel = this.channelList.getChannelByName(channelName);
+			this.pblHandler.setVariable("internal.irc.chan", channelName);
+			this.pblHandler.setVariable("internal.irc.nick", event.nickname);
+	
+			List<Trigger> triggers = this.triggerTable
+					.getChannelTriggers(channel);
+			List<Action> actions = new ArrayList<Action>();
+			for (Trigger trigger : triggers) {
+				if (trigger.matches(event)) {
+					actions = actionTable.getTriggerActions(trigger);
+					for (Action action : actions) {
+						this.pbot.privMsg(channelName, this.pblParser.eval(action.data));
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void userLeft(Part event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void topicChanged(Topic event) {
+		// TODO Auto-generated method stub
+		
 	}
 }
