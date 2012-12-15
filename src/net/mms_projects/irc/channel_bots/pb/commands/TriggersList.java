@@ -28,7 +28,7 @@ public class TriggersList extends Command {
 		List<Trigger> triggers = data.tableTriggers.getChannelTriggers(channel);
 		this.reply(data, String.format("%1$-10s", "type") + "data");
 		for (Trigger trigger : triggers) {
-			this.reply(data, "  " + String.format("%1$-10s", trigger.id) + trigger.data);
+			this.reply(data, "  " + String.format("%1$-10s", trigger.type) + trigger.data);
 		}
 		if (triggers.isEmpty()) {
 			data.bot.notice(data.event.source, "No triggers made yet");
