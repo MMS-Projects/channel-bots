@@ -1,5 +1,8 @@
 package net.mms_projects.irc.channel_bots.pb;
 
+import net.mms_projects.irc.channel_bots.pb.actions.Msg;
+import net.mms_projects.irc.channel_bots.pb.actions.Notice;
+
 public class Action {
 
 	public int id;
@@ -17,7 +20,9 @@ public class Action {
 	static public Action create(int id, int triggerId, String type, String data) {
 		Action action = null;
 		if (type.equalsIgnoreCase("msg")) {
-			action = new Action(id, triggerId, 1, data);
+			action = new Msg(id, triggerId, data);
+		} else if (type.equalsIgnoreCase("notice")) {
+			action = new Notice(id, triggerId, data);
 		}
 		return action;
 	}

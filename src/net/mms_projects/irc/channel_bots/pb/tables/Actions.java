@@ -50,7 +50,7 @@ public class Actions extends Table {
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				System.out
-						.println("Action data:" + resultSet.getString("data"));
+						.println("Action data:" + resultSet.getString("type"));
 				actions.add(Action.create(resultSet.getInt("id"),
 						resultSet.getInt("trigger_id"),
 						resultSet.getString("type"),
