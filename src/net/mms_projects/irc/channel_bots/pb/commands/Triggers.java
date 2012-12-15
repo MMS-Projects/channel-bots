@@ -11,6 +11,7 @@ public class Triggers extends Command {
 	public Triggers(CommandHandler handler) {
 		super("triggers", "Used to manage triggers", handler);
 		
+		this.addCommand(new TriggersAdd(handler, this));
 		this.addCommand(new TriggersList(handler, this));
 		
 		this.addSyntax(new CommandSyntax(new SubCommand("action", this.commands

@@ -12,7 +12,6 @@ public class Add extends Command {
 	public Add(CommandHandler handler) {
 		super("add", "Adds a entity to the channel.", handler);
 
-		this.addCommand(new AddTrigger(handler, this));
 		this.addCommand(new AddAction(handler, this));
 
 		this.addSyntax(new CommandSyntax(new SubCommand("type", this.commands
