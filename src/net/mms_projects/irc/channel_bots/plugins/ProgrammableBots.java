@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.ExecutorService;
 
 import net.mms_projects.irc.channel_bots.Bot;
 import net.mms_projects.irc.channel_bots.ChannelList;
@@ -32,8 +33,9 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 	private CommandHandler cmdHandler;
 
 	public ProgrammableBots(Socket socket, Handler handler, UserList userList,
-			ChannelList channelList, ServerList serverList) {
-		super(socket, handler, userList, channelList, serverList);
+			ChannelList channelList, ServerList serverList,
+			ExecutorService threadPool) {
+		super(socket, handler, userList, channelList, serverList, threadPool);
 
 		this.manager = new ServiceManager(socket, handler, userList,
 				channelList, serverList);
@@ -81,8 +83,9 @@ public class ProgrammableBots extends Plugin implements MessageListener {
 	@Override
 	public void onPrivMsg(PrivMsg event) {
 		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
-			boolean handled = this.cmdHandler.handle(event.text, new PassedData(this.userList,
-					this.channelList, this.serverList, this.pbot, event));
+			boolean handled = this.cmdHandler.handle(event.text,
+					new PassedData(this.userList, this.channelList,
+							this.serverList, this.pbot, event));
 			if (!handled) {
 				this.pbot.notice(event.source, "No command match >:(");
 			}
