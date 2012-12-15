@@ -163,21 +163,31 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 
 	}
 
-	public void handleJoin(Join command, String nickname, String channelName) {
-		Channel channel = this.channelList.getChannelByName(channelName);
+	public void handleJoin(final Join command, final String nickname, String channelName) {
+		final Channel channel = this.channelList.getChannelByName(channelName);
 		this.pblHandler.setVariable("internal.irc.chan", channelName);
 		this.pblHandler.setVariable("internal.irc.nick", nickname);
 
-		this.runTriggers(command, channel, nickname);
+		this.threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				runTriggers(command, channel, nickname);
+			}
+		});
 	}
 
-	public void handlePrivMsg(PrivMsg command, String nickname,
+	public void handlePrivMsg(final PrivMsg command, final String nickname,
 			String channelName) {
-		Channel channel = this.channelList.getChannelByName(channelName);
+		final Channel channel = this.channelList.getChannelByName(channelName);
 		this.pblHandler.setVariable("internal.irc.chan", channelName);
 		this.pblHandler.setVariable("internal.irc.nick", nickname);
 
-		this.runTriggers(command, channel, nickname);
+		this.threadPool.execute(new Runnable() {
+			@Override
+			public void run() {
+				runTriggers(command, channel, nickname);
+			}
+		});
 	}
 
 	public void runTriggers(Command command, Channel channel, String nickname) {
