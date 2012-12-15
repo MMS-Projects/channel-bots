@@ -67,6 +67,7 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 				"channel-bot.mms-projects.net");
 		this.manager.newBot(pbot);
 		pbot.join("#test");
+		pbot.join("#minecraft");
 
 		this.pblHandler.setVariable("internal.irc.me", pbot.nickname);
 
@@ -121,7 +122,8 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 			this.pblHandler.setVariable("internal.irc.nick", event.source);
 
 			this.pbot.privMsg(event.target, this.pblParser.eval(event.text));
-
+		}
+		if (event.target.startsWith("#")) {
 			this.handlePrivMsg(event, event.source, event.target);
 		}
 		if (event.target.equalsIgnoreCase(this.pbot.nickname)) {
