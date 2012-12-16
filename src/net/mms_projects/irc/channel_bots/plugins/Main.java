@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import net.mms_projects.irc.channel_bots.Channel;
 import net.mms_projects.irc.channel_bots.ChannelBots;
 import net.mms_projects.irc.channel_bots.ChannelList;
+import net.mms_projects.irc.channel_bots.Messages;
 import net.mms_projects.irc.channel_bots.Plugin;
 import net.mms_projects.irc.channel_bots.Server;
 import net.mms_projects.irc.channel_bots.ServerList;
@@ -46,7 +47,7 @@ public class Main extends Plugin implements PingPongListener,
 
 	@Override
 	public void onPing(Ping ping) {
-		socket.write("PONG :" + ping.token);
+		socket.write("PONG :" + ping.token); //$NON-NLS-1$
 	}
 
 	@Override
@@ -85,9 +86,8 @@ public class Main extends Plugin implements PingPongListener,
 		int timestamp = (int) (new Date().getTime() / 1000);
 		int offset = (event.currentTime - timestamp) * 1000;
 
-		String message = "Set timestamp offset to " + offset
-				+ ". Server time: " + event.currentTime + ". Service time: "
-				+ timestamp;
+		String message = String
+				.format(Messages.getString("sync.time_offset_message"), offset, event.currentTime, timestamp); //$NON-NLS-1$
 		System.out.println(message);
 		this.messageOps(message);
 
@@ -97,13 +97,13 @@ public class Main extends Plugin implements PingPongListener,
 		netInfo.maxGlobal = 10;
 		netInfo.currentTime = (int) (ChannelBots.date.getDate().getTime() / 1000);
 		netInfo.protocolVersion = 0;
-		netInfo.cloakHash = "*";
-		netInfo.networkName = "MMS-Projects IRC";
+		netInfo.cloakHash = "*"; //$NON-NLS-1$
+		netInfo.networkName = "MMS-Projects IRC"; //$NON-NLS-1$
 		socket.write(netInfo.toString());
 	}
 
 	public void messageOps(String message) {
-		this.socket.write(":channels.mms-projects.net SMO o :" + message);
+		this.socket.write(":channels.mms-projects.net SMO o :" + message); //$NON-NLS-1$
 	}
 
 	@Override
