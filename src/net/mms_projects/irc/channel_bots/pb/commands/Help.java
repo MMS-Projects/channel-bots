@@ -53,10 +53,11 @@ public class Help extends Command {
 			helped = true;
 		}
 		if (subject.hasCommands()) {
-			this.reply(data,
-					"For more information on a specific command, type /msg " //$NON-NLS-1$
-							+ data.bot.nickname + " " + this.getFullCommand() //$NON-NLS-1$
-							+ " command.", 200); //$NON-NLS-1$
+			this.reply(
+					data,
+					String.format(
+							Messages.getString("pb.command.help.text.for_more_information"), data.bot.nickname, //$NON-NLS-1$
+							this.getFullCommand()), 200);
 			subject.showCommands(data, 2);
 			helped = true;
 		}
