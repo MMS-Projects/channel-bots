@@ -10,6 +10,10 @@ public abstract class Trigger {
 	public String type;
 	public String data;
 	
+	public Trigger() {
+		
+	}
+	
 	public Trigger(int id, String type, String data) {
 		this.id = id;
 		this.type = type;

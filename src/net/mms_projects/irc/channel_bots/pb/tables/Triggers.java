@@ -36,7 +36,7 @@ public class Triggers extends Table {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		List<Trigger> triggers = new ArrayList<Trigger>();
 
 		Connection connection = null;
@@ -44,8 +44,8 @@ public class Triggers extends Table {
 		ResultSet resultSet = null;
 		try {
 			connection = this.connectionPool.getConnection();
-			statement = connection.prepareStatement(
-					"SELECT * FROM pb_triggers WHERE channel LIKE ?");
+			statement = connection
+					.prepareStatement("SELECT * FROM pb_triggers WHERE channel LIKE ?");
 			statement.setString(1, channel.name);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -73,6 +73,56 @@ public class Triggers extends Table {
 
 		}
 		return triggers;
+	}
+
+	public void updateOrInsert(Channel channel, Trigger trigger) {
+		if (!this.isInitialized()) {
+			new Exception("Table not initialized").printStackTrace();
+		}
+		try {
+			if (!this.exists()) {
+				new Exception("Table not existing").printStackTrace();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = this.connectionPool.getConnection();
+			if (trigger.id > 0) {
+				statement = connection.prepareStatement("UPDATE " + this.name
+						+ " SET data = ? WHERE id = ?");
+				statement.setString(1, trigger.data);
+				statement.setInt(2, trigger.id);
+				statement.execute();
+			} else {
+				statement = connection
+						.prepareStatement("INSERT INTO " + this.name
+								+ " (channel, type, data) VALUES (?, ?, ?)");
+				statement.setString(1, channel.name);
+				statement.setString(2, trigger.type);
+				statement.setString(3, trigger.data);
+				statement.execute();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				connection.close();
+				if (resultSet != null) {
+					resultSet.close();
+				}
+				if (statement != null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 }
