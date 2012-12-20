@@ -1,5 +1,6 @@
 package net.mms_projects.irc.channel_bots.pb.commands;
 
+import net.mms_projects.irc.channel_bots.Messages;
 import net.mms_projects.irc.channel_bots.pb.Command;
 import net.mms_projects.irc.channel_bots.pb.CommandArgument;
 import net.mms_projects.irc.channel_bots.pb.CommandHandler;
@@ -12,20 +13,21 @@ public class Help extends Command {
 	private Command subject;
 
 	public Help(CommandHandler handler, Command subject) {
-		super("help", "Shows some help?", handler);
+		super(
+				"help", Messages.getString("pb.command.help.short_description"), handler); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.subject = subject;
 		this.showInList = false;
 	}
 
 	public Help(CommandHandler handler) {
-		super("help", "Shows some help?", handler);
+		super(
+				"help", Messages.getString("pb.command.help.short_description"), handler); //$NON-NLS-1$ //$NON-NLS-2$
 
-		this.addSyntax(new CommandSyntax(new Text("subject")));
-		this.setLongDescription("This is the help. It will give you information "
-				+ "about the available commands. As the help is new it might not "
-				+ "contain all information yet.");
-
+		this.addSyntax(new CommandSyntax(new Text(Messages
+				.getString("Help.pb.command.help.argument.subject")))); //$NON-NLS-1$
+		this.setLongDescription(Messages
+				.getString("pb.command.help.long_description")); //$NON-NLS-1$
 		this.subject = this;
 		this.addHelp();
 	}
@@ -41,14 +43,15 @@ public class Help extends Command {
 		}
 		if (this.subject.longDescription != null) {
 			this.reply(data, this.subject.longDescription);
-			this.reply(data, "- ");
+			this.reply(data, "- "); //$NON-NLS-1$
 			helped = true;
 		}
 		if (subject.hasCommands()) {
-			this.reply(data,
-					"For more information on a specific command, type /msg "
-							+ data.bot.nickname + " " + this.getFullCommand()
-							+ " command.", 200);
+			this.reply(
+					data,
+					String.format(
+							Messages.getString("pb.command.help.text.for_more_information"), data.bot.nickname, //$NON-NLS-1$
+							this.getFullCommand()), 200);
 			subject.showCommands(data, 2);
 			helped = true;
 		}
@@ -65,25 +68,29 @@ public class Help extends Command {
 	public boolean showSyntax(PassedData data) {
 		boolean helped = false;
 		for (CommandSyntax syntax : this.subject.syntaxes) {
-			String syntaxText = "";
+			String syntaxText = ""; //$NON-NLS-1$
 			for (CommandArgument argument : syntax.arguments) {
-				syntaxText += "";
+				syntaxText += ""; //$NON-NLS-1$
 				if ((argument.defaults != null)
 						&& (argument.defaults.length != 0)) {
-					syntaxText += "[";
+					syntaxText += "["; //$NON-NLS-1$
 					for (String example : argument.defaults) {
-						syntaxText += example + "/";
+						syntaxText += example + "/"; //$NON-NLS-1$
 					}
 					syntaxText = syntaxText.substring(0,
-							syntaxText.length() - 1) + "]";
+							syntaxText.length() - 1) + "]"; //$NON-NLS-1$
 				} else {
 					syntaxText += argument.name;
 				}
-				syntaxText += " ";
+				syntaxText += " "; //$NON-NLS-1$
 			}
-			this.reply(data, "Syntax: " + this.subject.getFullCommand() + " "
-					+ syntaxText + "");
+			this.reply(
+					data,
+					"Syntax: " + this.subject.getFullCommand() + " " + syntaxText + ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			helped = true;
+		}
+		if (!helped) {
+			this.reply(data, Messages.getString("pb.no_help_available")); //$NON-NLS-1$
 		}
 		return helped;
 	}
@@ -93,7 +100,7 @@ public class Help extends Command {
 		if (this.subject == this) {
 			return super.getFullCommand();
 		}
-		return super.getFullCommand() + " " + this.subject.getFullCommand();
+		return super.getFullCommand() + " " + this.subject.getFullCommand(); //$NON-NLS-1$
 	}
 
 	@Override
