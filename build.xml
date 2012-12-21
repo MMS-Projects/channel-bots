@@ -24,6 +24,11 @@
 	-->
 
 	<path id="global-classpath">
+		<fileset file="lib/bonecp-0.7.1.RELEASE.jar" />
+		<fileset file="lib/guava-13.0.1.jar" />
+		<fileset file="lib/slf4j-api-1.7.2.jar" />
+		<fileset file="lib/slf4j-jdk14-1.7.2.jar" />
+		<fileset file="lib/sqlite-jdbc-3.7.2.jar" />
 	</path>
 
 	<!--
@@ -50,6 +55,11 @@
 
 	<target name="jar" depends="compile, global-manifest">
 		<jar manifest="build/META-INF/MANIFEST.MF" destfile="build/channel-bots.jar" filesetmanifest="mergewithoutmain" basedir="build/classes">
+			<zipfileset excludes="META-INF/*.SF" src="lib/bonecp-0.7.1.RELEASE.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/guava-13.0.1.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/slf4j-api-1.7.2.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/slf4j-jdk14-1.7.2.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="lib/sqlite-jdbc-3.7.2.jar" />
 			<fileset dir=".">
             		</fileset>
 		</jar>

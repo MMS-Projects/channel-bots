@@ -24,11 +24,6 @@ public class Variable extends Command {
 	}
 
 	@Override
-	public boolean match(String rawdata) {
-		return rawdata.startsWith(this.getFullCommand());
-	}
-
-	@Override
 	public void run(String rawdata, PassedData data) {
 		boolean handled = this.handle(rawdata, data);
 		if (!handled) {

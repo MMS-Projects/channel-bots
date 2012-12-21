@@ -22,11 +22,6 @@ public class VariableSet extends Command {
 	}
 
 	@Override
-	public boolean match(String rawdata) {
-		return rawdata.startsWith(this.getFullCommand());
-	}
-
-	@Override
 	public void run(String rawdata, PassedData data) {
 		Tokenizer tokens = new Tokenizer(rawdata, " ");
 

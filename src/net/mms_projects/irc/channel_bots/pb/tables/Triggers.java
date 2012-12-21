@@ -1,5 +1,6 @@
 package net.mms_projects.irc.channel_bots.pb.tables;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,13 +36,15 @@ public class Triggers extends Table {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		
 		List<Trigger> triggers = new ArrayList<Trigger>();
 
+		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			statement = this.getConnection().prepareStatement(
+			connection = this.connectionPool.getConnection();
+			statement = connection.prepareStatement(
 					"SELECT * FROM pb_triggers WHERE channel LIKE ?");
 			statement.setString(1, channel.name);
 			resultSet = statement.executeQuery();
@@ -57,6 +60,7 @@ public class Triggers extends Table {
 			e.printStackTrace();
 		} finally {
 			try {
+				connection.close();
 				if (resultSet != null) {
 					resultSet.close();
 				}

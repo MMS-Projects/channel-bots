@@ -75,7 +75,9 @@ public abstract class Command extends CommandHandler {
 		}
 	}
 
-	abstract public boolean match(String rawdata);
+	public boolean match(String rawdata) {
+		return rawdata.startsWith(this.getFullCommand());
+	}
 
 	abstract public void run(String rawdata, PassedData data);
 

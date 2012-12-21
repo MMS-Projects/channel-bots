@@ -5,27 +5,25 @@ import net.mms_projects.irc.channel_bots.pb.CommandHandler;
 import net.mms_projects.irc.channel_bots.pb.CommandSyntax;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.command_arguments.SubCommand;
-import net.mms_projects.irc.channel_bots.pb.command_arguments.Text;
 
-public class Add extends Command {
+public class Triggers extends Command {
 
-	public Add(CommandHandler handler) {
-		super("add", "Adds a entity to the channel.", handler);
-
-		this.addCommand(new AddTrigger(handler, this));
-		this.addCommand(new AddAction(handler, this));
-
-		this.addSyntax(new CommandSyntax(new SubCommand("type", this.commands
+	public Triggers(CommandHandler handler) {
+		super("triggers", "Used to manage triggers", handler);
+		
+		this.addCommand(new TriggersList(handler, this));
+		
+		this.addSyntax(new CommandSyntax(new SubCommand("action", this.commands
 				.toArray(new Command[this.commands.size()]))));
 
 		this.addHelp();
 	}
-	
+
 	@Override
 	public void run(String rawdata, PassedData data) {
 		boolean handled = this.handle(rawdata, data);
 		if (!handled) {
-			data.bot.notice(data.event.source, "Added some blabla");
+			data.bot.notice(data.event.source, "Please specify a subcommand.");
 			this.getHelp().run(rawdata, data);
 		}
 	}

@@ -36,7 +36,8 @@ public class Table {
 	}
 
 	public boolean exists() throws SQLException {
-		Statement statement = this.getConnection().createStatement();
+		Connection connection = this.getConnection();
+		Statement statement = connection.createStatement();
 		try {
 			statement.execute("SELECT * FROM " + this.name);
 		} catch (SQLException e) {
@@ -45,6 +46,9 @@ public class Table {
 			} else {
 				throw e;
 			}
+		} finally {
+			connection.close();
+			statement.close();
 		}
 		return true;
 	}

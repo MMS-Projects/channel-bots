@@ -13,11 +13,6 @@ public class AddAction extends Command {
 	}
 
 	@Override
-	public boolean match(String rawdata) {
-		return rawdata.startsWith(this.getFullCommand());
-	}
-
-	@Override
 	public void run(String rawdata, PassedData data) {
 		data.bot.notice(data.event.source, "Added a action");
 	}

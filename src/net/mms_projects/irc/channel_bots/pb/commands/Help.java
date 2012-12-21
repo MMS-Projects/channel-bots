@@ -31,11 +31,6 @@ public class Help extends Command {
 	}
 
 	@Override
-	public boolean match(String rawdata) {
-		return rawdata.equalsIgnoreCase(this.getFullCommand());
-	}
-
-	@Override
 	public void run(String rawdata, PassedData data) {
 		boolean helped = false;
 		CommandHandler subject = null;

@@ -1,5 +1,6 @@
 package net.mms_projects.irc.channel_bots.pb.tables;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,16 +39,18 @@ public class Actions extends Table {
 
 		List<Action> actions = new ArrayList<Action>();
 
+		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			statement = this.getConnection().prepareStatement(
+			connection = this.getConnection();
+			statement = connection.prepareStatement(
 					"SELECT * FROM pb_actions WHERE trigger_id = ?");
 			statement.setInt(1, trigger.id);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				System.out
-						.println("Action data:" + resultSet.getString("data"));
+						.println("Action data:" + resultSet.getString("type"));
 				actions.add(Action.create(resultSet.getInt("id"),
 						resultSet.getInt("trigger_id"),
 						resultSet.getString("type"),
@@ -58,6 +61,7 @@ public class Actions extends Table {
 			e.printStackTrace();
 		} finally {
 			try {
+				connection.close();
 				if (resultSet != null) {
 					resultSet.close();
 				}
