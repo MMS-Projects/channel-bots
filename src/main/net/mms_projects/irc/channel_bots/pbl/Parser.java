@@ -3,10 +3,7 @@ package net.mms_projects.irc.channel_bots.pbl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mms_projects.irc.channel_bots.pbl.language_entities.Append;
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Identifier;
-import net.mms_projects.irc.channel_bots.pbl.language_entities.Rawdata;
-import net.mms_projects.irc.channel_bots.pbl.language_entities.Text;
 import net.mms_projects.irc.channel_bots.pbl.language_entities.Variable;
 
 public class Parser {
@@ -35,9 +32,7 @@ public class Parser {
 	}
 
 	private String eval(String rawdata, int currentEvalation, int maxEvaluations) {
-		// System.out.println("Input: " + rawdata);
-
-		Rawdata data = new Rawdata(this.handler, this);
+		System.out.println("Input: " + rawdata);
 
 		rawdata += "\n";
 
@@ -45,69 +40,41 @@ public class Parser {
 
 		Identifier currentIdentifier = null;
 		Variable currentVariable = null;
-		Text currentText = new Text(handler, this);
-		LanguageEntity currentEntity = currentText;
 
 		List<Character> input = new ArrayList<Character>();
 		for (Character c : rawdata.toCharArray()) {
 			input.add(c);
 		}
 		int dataStart = 0;
+		int identifierStart = 0;
 		int entityStart = 0;
 		int parenthesesCount = 0;
 
-		// System.out.println(currentEvalation + " - " + maxEvaluations);
+		System.out.println(currentEvalation + " - " + maxEvaluations);
 		if ((maxEvaluations < 0) || (currentEvalation < maxEvaluations)) {
 			for (int i = 0; i < input.size(); ++i) {
 				if (input.get(i) == '$') {
-					if (currentEntity instanceof Text) {
-						if ((input.size() > i + 1) && (input.get(i + 1) == '+')
-								&& (input.size() > i + 2)
-								&& (input.get(i + 2) != '(')) {
-							
-							data.addEntity(currentEntity);
-							data.addEntity(new Append(handler, this));
-	
-							currentIdentifier = null;
-							currentVariable = null;
-							currentText = new Text(handler, this);
-							currentEntity = currentText;
-	
-							i++;
-							continue;
-						}
-						boolean isIdentifier = true;
-						if ((input.size() > i + 1) && (input.get(i + 1) == ' ')) {
-							isIdentifier = false;
-						}
-						if ((input.size() > i + 1) && (input.get(i + 1) == '\n')) {
-							isIdentifier = false;
-						}
-						
-						if (isIdentifier) {
-							data.addEntity(currentEntity);
-	
-							currentIdentifier = new Identifier(this.handler, this);
-							currentVariable = null;
-							currentText = null;
-							currentEntity = currentIdentifier;
-	
-							dataStart = i;
-							entityStart = i;
-	
-							identifierType = Identifier.TYPE_NORMAL;
-						}
+					if ((input.size() > i + 1) && (input.get(i + 1) == '+')
+							&& (input.size() > i + 2)
+							&& (input.get(i + 2) != '(')) {
+						List<Character> replacement = new ArrayList<Character>();
+						replacement.add(' ');
+						replacement.add('\u5001');
+						replacement.add(' ');
+						input = replacePart(input, i - 1, i + 3, replacement);
+						continue;
+					}
+					if (identifierType == 0) {
+						currentIdentifier = new Identifier();
+						dataStart = i;
+						identifierStart = i;
+
+						identifierType = Identifier.TYPE_NORMAL;
 					}
 				}
-				if (currentEntity instanceof Text) {
+				if (currentIdentifier == null) {
 					if (input.get(i) == '%') {
-						data.addEntity(currentEntity);
-
-						currentIdentifier = null;
-						currentVariable = new Variable(this.handler, this);
-						currentText = null;
-						currentEntity = currentVariable;
-
+						currentVariable = new Variable();
 						entityStart = i;
 					}
 				}
@@ -122,107 +89,95 @@ public class Parser {
 						identifierType = Identifier.TYPE_PARAMETERS;
 					}
 				}
-				if (currentEntity instanceof Identifier) {
-					if (input.get(i) == ',') {
-						if ((identifierType == Identifier.TYPE_PARAMETERS)
-								&& (parenthesesCount == 1)) {
-							System.out.println(currentIdentifier);
-							System.out.println(currentEntity.getClass()
-									.getSimpleName());
-							currentIdentifier.arguments.add(getPart(input,
-									dataStart + 1, i));
-							dataStart = i;
+				if (input.get(i) == ',') {
+					if ((identifierType == Identifier.TYPE_PARAMETERS)
+							&& (parenthesesCount == 1)) {
+						currentIdentifier.arguments.add(this.eval(
+								getPart(input, dataStart + 1, i),
+								currentEvalation + 1, maxEvaluations));
+						dataStart = i;
+					}
+				}
+				if (input.get(i) == ')') {
+					if ((identifierType == Identifier.TYPE_PARAMETERS)
+							&& (parenthesesCount == 1)) {
+						currentIdentifier.arguments.add(this.eval(
+								getPart(input, dataStart + 1, i),
+								currentEvalation + 1, maxEvaluations));
+
+						if ((input.size() > i + 1) && (input.get(i + 1) == '.')) {
+							dataStart = i + 1;
+
+							identifierType = Identifier.TYPE_PROPERTY;
+						} else {
+							currentIdentifier.unparsed = getPart(input,
+									identifierStart, i + 1);
+
+							List<Character> output = this.handler
+									.handle(currentIdentifier);
+							currentIdentifier.dump();
+							input = replacePart(input, identifierStart, i + 1,
+									output);
+							i = identifierStart;
+
+							currentIdentifier = null;
+							identifierType = 0;
 						}
 					}
-					if (input.get(i) == ')') {
-						if ((identifierType == Identifier.TYPE_PARAMETERS)
-								&& (parenthesesCount == 1)) {
-							currentIdentifier.arguments.add(getPart(input,
-									dataStart + 1, i));
-
-							if ((input.size() > i + 1)
-									&& (input.get(i + 1) == '.')) {
-								dataStart = i + 1;
-
-								identifierType = Identifier.TYPE_PROPERTY;
-							} else {
-								currentIdentifier.unparsed = getPart(input,
-										entityStart, i + 1);
-
-								data.addEntity(currentEntity);
-
-								i++;
-
-								currentIdentifier = null;
-								currentVariable = null;
-								currentText = new Text(handler, this);
-								currentEntity = currentText;
-
-								identifierType = 0;
-							}
-						}
-						--parenthesesCount;
-					}
+					--parenthesesCount;
 				}
 				if ((input.get(i) == ' ') || (input.get(i) == '\n')) {
 					if (identifierType == Identifier.TYPE_NORMAL) {
 						currentIdentifier.name = getPart(input, dataStart + 1,
 								i);
 						currentIdentifier.unparsed = getPart(input,
-								entityStart, i);
+								identifierStart, i);
 
-						data.addEntity(currentEntity);
+						List<Character> output = this.handler
+								.handle(currentIdentifier);
+						currentIdentifier.dump();
+						input = replacePart(input, identifierStart, i, output);
+						i = identifierStart;
 
 						currentIdentifier = null;
-						currentVariable = null;
-						currentText = new Text(handler, this);
-						currentEntity = currentText;
-
 						identifierType = 0;
 					}
 					if (identifierType == Identifier.TYPE_PROPERTY) {
 						currentIdentifier.property = getPart(input,
 								dataStart + 1, i);
 						currentIdentifier.unparsed = getPart(input,
-								entityStart, i);
+								identifierStart, i);
 
-						data.addEntity(currentEntity);
+						List<Character> output = this.handler
+								.handle(currentIdentifier);
+						currentIdentifier.dump();
+						input = replacePart(input, identifierStart, i, output);
+						i = identifierStart;
 
 						currentIdentifier = null;
-						currentVariable = null;
-						currentText = new Text(handler, this);
-						currentEntity = currentText;
-
 						identifierType = 0;
 					}
 					if (currentVariable != null) {
 						currentVariable.name = getPart(input, entityStart + 1,
 								i);
 
-						data.addEntity(currentEntity);
+						List<Character> output = this.handler
+								.handle(currentVariable);
+						System.out.println(currentVariable.dump());
+						input = replacePart(input, entityStart, i, output);
+						i = entityStart;
 
-						currentIdentifier = null;
 						currentVariable = null;
-						currentText = new Text(handler, this);
-						currentEntity = currentText;
 					}
 				}
-				if (currentEntity instanceof Text) {
-					currentText.text += input.get(i);
-				}
 			}
-			data.addEntity(currentText);
 		}
 
-		rawdata = data.getOutput().trim();
+		rawdata = getPart(input, 0, input.size() - 1).trim();
 		rawdata = rawdata.replace(" \u5001 ", "");
 
-		// System.out.println("Output: " + rawdata);
-		// System.out.println("----------");
-
-		data.dump();
-		System.out.println("Output: " + data.getOutput().trim());
-
+		System.out.println("Output: " + rawdata);
+		System.out.println("----------");
 		return rawdata;
 	}
 
