@@ -1,5 +1,6 @@
 package net.mms_projects.irc.channel_bots.pb.commands;
 
+import net.mms_projects.irc.channel_bots.Messages;
 import net.mms_projects.irc.channel_bots.pb.Command;
 import net.mms_projects.irc.channel_bots.pb.CommandArgument;
 import net.mms_projects.irc.channel_bots.pb.CommandHandler;
@@ -84,6 +85,9 @@ public class Help extends Command {
 			this.reply(data, "Syntax: " + this.subject.getFullCommand() + " "
 					+ syntaxText + "");
 			helped = true;
+		}
+		if (!helped) {
+			this.reply(data, Messages.getString("pb.no_help_available")); //$NON-NLS-1$
 		}
 		return helped;
 	}
