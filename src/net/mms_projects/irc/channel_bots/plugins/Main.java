@@ -1,6 +1,7 @@
 package net.mms_projects.irc.channel_bots.plugins;
 
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
 
 import net.mms_projects.irc.channel_bots.Channel;
 import net.mms_projects.irc.channel_bots.ChannelBots;
@@ -33,8 +34,9 @@ public class Main extends Plugin implements PingPongListener,
 		UserUpdateListener, NetworkListener, ChannelListener {
 
 	public Main(Socket socket, Handler handler, UserList userList,
-			ChannelList channelList, ServerList serverList) {
-		super(socket, handler, userList, channelList, serverList);
+			ChannelList channelList, ServerList serverList,
+			ExecutorService threadPool) {
+		super(socket, handler, userList, channelList, serverList, threadPool);
 
 		handler.addPingPongListener(this);
 		handler.addUserUpdateListener(this);

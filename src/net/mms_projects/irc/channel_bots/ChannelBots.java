@@ -1,6 +1,8 @@
 package net.mms_projects.irc.channel_bots;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import net.mms_projects.irc.channel_bots.irc.Command;
@@ -36,6 +38,8 @@ public class ChannelBots {
 		final UserList userList = new UserList();
 		final ChannelList channelList = new ChannelList();
 		final ServerList serverList = new ServerList();
+		
+		final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
 		Pass pass = new Pass();
 		pass.password = "PassWord";
@@ -89,10 +93,10 @@ public class ChannelBots {
 		}).start();
 
 		/* final Plugin main = */new Main(socket, handler, userList,
-				channelList, serverList);
+				channelList, serverList, threadPool);
 		/* final Plugin eventDebug = */new EventDebug(socket, handler,
-				userList, channelList, serverList);
-		new ProgrammableBots(socket, handler, userList, channelList, serverList);
+				userList, channelList, serverList, threadPool);
+		new ProgrammableBots(socket, handler, userList, channelList, serverList, threadPool);
 
 		new Thread(new Runnable() {
 			@Override
@@ -104,7 +108,13 @@ public class ChannelBots {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					handler.handle(command);
+					final Command finalCommand = command;
+					threadPool.execute(new Runnable() {
+						public void run() {
+							handler.handle(finalCommand);
+						}
+					});
+					
 				}
 			}
 		}).start();

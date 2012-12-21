@@ -22,10 +22,10 @@ public class Help extends Command {
 		super("help", "Shows some help?", handler);
 
 		this.addSyntax(new CommandSyntax(new Text("subject")));
-		this.setLongDescription("This is the help. It will give you information " +
-				"about the available commands. As the help is new it might not " +
-				"contain all information yet.");
-		
+		this.setLongDescription("This is the help. It will give you information "
+				+ "about the available commands. As the help is new it might not "
+				+ "contain all information yet.");
+
 		this.subject = this;
 		this.addHelp();
 	}
@@ -57,7 +57,8 @@ public class Help extends Command {
 			helped = syntaxHelped;
 		}
 		if (!helped) {
-			this.reply(data, "There is no information available about this command.");
+			this.reply(data,
+					"There is no information available about this command.");
 		}
 	}
 
@@ -67,29 +68,37 @@ public class Help extends Command {
 			String syntaxText = "";
 			for (CommandArgument argument : syntax.arguments) {
 				syntaxText += "";
-				if (argument.defaults != null) {
+				if ((argument.defaults != null)
+						&& (argument.defaults.length != 0)) {
 					syntaxText += "[";
 					for (String example : argument.defaults) {
 						syntaxText += example + "/";
 					}
-					syntaxText = syntaxText.substring(0, syntaxText.length() - 1) + "]";
+					syntaxText = syntaxText.substring(0,
+							syntaxText.length() - 1) + "]";
 				} else {
 					syntaxText += argument.name;
 				}
 				syntaxText += " ";
 			}
-			this.reply(data, "Syntax: " + this.subject.getFullCommand() + " " + syntaxText + "");
+			this.reply(data, "Syntax: " + this.subject.getFullCommand() + " "
+					+ syntaxText + "");
 			helped = true;
 		}
 		return helped;
 	}
-	
+
 	@Override
 	public String getFullCommand() {
 		if (this.subject == this) {
 			return super.getFullCommand();
 		}
 		return super.getFullCommand() + " " + this.subject.getFullCommand();
+	}
+
+	@Override
+	public boolean match(String rawdata) {
+		return rawdata.equalsIgnoreCase(this.getFullCommand());
 	}
 
 }
