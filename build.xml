@@ -48,7 +48,7 @@
 	<target name="compile" depends="clean">
 		<mkdir dir="build/classes" />
 		<!-- . is used for pointing to the current directory -->
-		<javac srcdir="src" destdir="build/classes">
+		<javac srcdir="src/main" destdir="build/classes">
 			<classpath refid="global-classpath" />
 		</javac>
 	</target>
