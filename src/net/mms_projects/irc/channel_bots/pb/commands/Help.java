@@ -52,8 +52,9 @@ public class Help extends Command {
 			subject.showCommands(data, 2);
 			helped = true;
 		}
-		if (!helped) {
-			helped = this.showSyntax(data);
+		boolean syntaxHelped = this.showSyntax(data);
+		if (syntaxHelped) {
+			helped = syntaxHelped;
 		}
 		if (!helped) {
 			this.reply(data, "There is no information available about this command.");
