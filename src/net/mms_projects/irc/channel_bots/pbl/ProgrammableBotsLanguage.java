@@ -18,7 +18,7 @@ public class ProgrammableBotsLanguage {
 		handler.setVariable("internal.irc.me", "PBL-TestBot");
 
 		this.parser = new Parser(handler);
-
+		
 		//this.parse("$a(a,(a,b))");
 		//this.parse("Het is $time");
 		//this.parse("Het is $time of niet?");

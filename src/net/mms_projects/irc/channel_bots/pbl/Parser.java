@@ -56,7 +56,7 @@ public class Parser {
 		int entityStart = 0;
 		int parenthesesCount = 0;
 
-		System.out.println(currentEvalation + " - " + maxEvaluations);
+		// System.out.println(currentEvalation + " - " + maxEvaluations);
 		if ((maxEvaluations < 0) || (currentEvalation < maxEvaluations)) {
 			for (int i = 0; i < input.size(); ++i) {
 				if (input.get(i) == '$') {
