@@ -7,10 +7,14 @@ import net.mms_projects.irc.channel_bots.pb.triggers.Msg;
 public abstract class Trigger {
 
 	public int id;
-	public int type;
+	public String type;
 	public String data;
 	
-	public Trigger(int id, int type, String data) {
+	public Trigger() {
+		
+	}
+	
+	public Trigger(int id, String type, String data) {
 		this.id = id;
 		this.type = type;
 		this.data = data;

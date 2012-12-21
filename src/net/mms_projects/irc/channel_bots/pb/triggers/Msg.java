@@ -9,8 +9,14 @@ import net.mms_projects.irc.channel_bots.pb.Trigger;
 
 public class Msg extends Trigger {
 
+	public Msg() {
+		super();
+		
+		this.type = "MSG";
+	}
+	
 	public Msg(int id, String data) {
-		super(id, 1, data);
+		super(id, "MSG", data);
 	}
 
 	@Override

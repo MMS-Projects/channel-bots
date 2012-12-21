@@ -7,9 +7,15 @@ import net.mms_projects.irc.channel_bots.irc.Command;
 import net.mms_projects.irc.channel_bots.pb.Trigger;
 
 public class Join extends Trigger {
-
+	
+	public Join() {
+		super();
+		
+		this.type = "JOIN";
+	}
+	
 	public Join(int id, String data) {
-		super(id, 2, data);
+		super(id, "JOIN", data);
 	}
 
 	@Override

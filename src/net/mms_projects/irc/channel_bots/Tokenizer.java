@@ -66,6 +66,10 @@ public class Tokenizer {
 	public boolean isToken(int token) {
 		return this.isToken(Integer.toString(token));
 	}
+	
+	public int numTok() {
+		return this.tokens.length + 1;
+	}
 
 	private int[] parseTokenData(String token) {
 		boolean followUp = false;
