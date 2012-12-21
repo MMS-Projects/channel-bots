@@ -28,7 +28,7 @@ public class Help extends Command {
 				.getString("Help.pb.command.help.argument.subject")))); //$NON-NLS-1$
 		this.setLongDescription(Messages
 				.getString("pb.command.help.long_description")); //$NON-NLS-1$
-		
+
 		this.subject = this;
 		this.addHelp();
 	}
