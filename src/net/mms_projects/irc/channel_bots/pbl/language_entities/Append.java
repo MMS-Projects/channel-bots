@@ -4,22 +4,17 @@ import net.mms_projects.irc.channel_bots.pbl.Handler;
 import net.mms_projects.irc.channel_bots.pbl.LanguageEntity;
 import net.mms_projects.irc.channel_bots.pbl.Parser;
 
-public class Variable extends LanguageEntity {
+public class Append extends LanguageEntity {
 
-	public Variable(Handler handler, Parser parser) {
-		super(handler, parser);
-	}
-
-	public String name;
+	static String character = "\u5001";
 	
-	@Override
-	public String dump() {
-		return null;
+	public Append(Handler handler, Parser parser) {
+		super(handler, parser);
 	}
 
 	@Override
 	public String getOutput() {
-		return this.handler.getVariable(name);
+		return Append.character;
 	}
-	
+
 }
