@@ -29,7 +29,7 @@ import net.mms_projects.irc.channel_bots.pb.Trigger;
 import net.mms_projects.irc.channel_bots.pb.actions.Msg;
 import net.mms_projects.irc.channel_bots.pb.commands.Add;
 import net.mms_projects.irc.channel_bots.pb.commands.Help;
-import net.mms_projects.irc.channel_bots.pb.commands.Variable;
+import net.mms_projects.irc.channel_bots.pb.commands.Variables;
 import net.mms_projects.irc.channel_bots.pb.tables.Actions;
 import net.mms_projects.irc.channel_bots.pb.tables.Triggers;
 import net.mms_projects.irc.channel_bots.pbl.Parser;
@@ -70,7 +70,7 @@ public class ProgrammableBots extends Plugin implements MessageListener,
 		cmdHandler = new CommandHandler();
 		cmdHandler.addCommand(new Add(cmdHandler));
 		cmdHandler.addCommand(new net.mms_projects.irc.channel_bots.pb.commands.Triggers(cmdHandler));
-		cmdHandler.addCommand(new Variable(cmdHandler));
+		cmdHandler.addCommand(new Variables(cmdHandler));
 		cmdHandler.addCommand(new Help(cmdHandler));
 
 		try {
