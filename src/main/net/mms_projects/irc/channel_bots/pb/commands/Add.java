@@ -5,7 +5,6 @@ import net.mms_projects.irc.channel_bots.pb.CommandHandler;
 import net.mms_projects.irc.channel_bots.pb.CommandSyntax;
 import net.mms_projects.irc.channel_bots.pb.PassedData;
 import net.mms_projects.irc.channel_bots.pb.command_arguments.SubCommand;
-import net.mms_projects.irc.channel_bots.pb.command_arguments.Text;
 
 public class Add extends Command {
 
